@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter_Tight } from 'next/font/google'
 import '@/app/globals.css'
 import Navbar from '@/components/Header/Navbar'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const inter_tight = Inter_Tight({
     weight: ['200', '300', '400', '500', '600', '700', '800'],
@@ -27,11 +28,13 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang='en'>
-            <body className={`${inter_tight.className}`}>
-                <Navbar />
-                {children}
-            </body>
-        </html>
+        <ClerkProvider>
+            <html lang='en'>
+                <body className={`${inter_tight.className}`}>
+                    <Navbar />
+                    {children}
+                </body>
+            </html>
+        </ClerkProvider>
     )
 }

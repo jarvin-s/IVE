@@ -48,10 +48,21 @@
 
 body {
     /* background-color: #500724; */
-    background-color: #0c0a09;
     overflow-x: hidden;
 }
 
 .big-card {
     border-radius: 2vmin;
+}
+
+.cl-internal-1dauvpw {
+    display: none;
+}
+
+.cl-internal-1hp5nqm {
+    display: none;
+}
+
+.cl-userButtonPopoverActionButton__manageAccount {
+    display: none;
 }

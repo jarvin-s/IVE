@@ -1,9 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
-import { ChevronDown } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import {
     Sheet,
     SheetTrigger,
@@ -16,43 +14,23 @@ import {
     NavigationMenuList,
     NavigationMenuLink,
 } from '@/components/ui/navigation-menu'
+import { AuthButtons } from '../Auth/AuthButtons'
+import Image from 'next/image'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import Image from 'next/image'
-import { Bebas_Neue } from 'next/font/google'
-
-const bebas_neue = Bebas_Neue({
-    weight: '400',
-    subsets: ['latin'],
-})
-
-interface Position {
-    left: number
-    width: number
-    opacity: number
-}
+import { ChevronDown } from 'lucide-react'
 
 interface TabProps {
     children: React.ReactNode
-    setPosition: (position: Position) => void
     href: string
-}
-
-interface CursorProps {
-    position: Position
 }
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false)
-    const [position, setPosition] = useState<Position>({
-        left: 0,
-        width: 0,
-        opacity: 0,
-    })
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
@@ -70,7 +48,7 @@ const Navbar = () => {
             }`}
         >
             <div className='container mx-auto px-4'>
-                <div className='flex h-16 items-center justify-between lg:justify-center'>
+                <div className='flex h-16 items-center justify-between lg:justify-between'>
                     <Link href={'/'} className='flex items-center'>
                         <Image
                             src='/images/logo.png'
@@ -115,46 +93,6 @@ const Navbar = () => {
                                 >
                                     Home
                                 </Link>
-                                <Link
-                                    href={'/albums'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Albums
-                                </Link>
-                                <Link
-                                    href={'/postcards'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Postcards
-                                </Link>
-                                <Link
-                                    href={'photocards'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Photocards
-                                </Link>
-                                <Link
-                                    href={'/merch'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Merch
-                                </Link>
-                                <Link
-                                    href={'/dashboard'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Quiz
-                                </Link>
                                 <div className='flex justify-center py-2 text-lg hover:underline'>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -194,66 +132,30 @@ const Navbar = () => {
                                     </DropdownMenu>
                                 </div>
                                 <Link
-                                    href={'/sign-in'}
+                                    href={'/dashboard'}
                                     className='flex w-full items-center justify-center py-2 text-lg hover:underline'
                                     prefetch={false}
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    Sign in
+                                    Quiz
                                 </Link>
+                                <AuthButtons />
                             </div>
                         </SheetContent>
                     </Sheet>
 
-                    <NavigationMenu
-                        className={`${bebas_neue.className} hidden text-white lg:flex`}
-                    >
+                    <NavigationMenu className='hidden text-white lg:flex'>
                         <div className='flex items-center gap-8'>
-                            <NavigationMenuList
-                                className='relative'
-                                onMouseLeave={() => {
-                                    setPosition((pv) => ({
-                                        ...pv,
-                                        opacity: 0,
-                                    }))
-                                }}
-                            >
-                                <Tab setPosition={setPosition} href={'/home'}>
-                                    Home
-                                </Tab>
-                                <Tab setPosition={setPosition} href={'/albums'}>
-                                    Albums
-                                </Tab>
-                                <Tab
-                                    setPosition={setPosition}
-                                    href={'/postcards'}
-                                >
-                                    Postcards
-                                </Tab>
-                                <Tab
-                                    setPosition={setPosition}
-                                    href={'/photocards'}
-                                >
-                                    Photocards
-                                </Tab>
-                                <Tab setPosition={setPosition} href={'/merch'}>
-                                    Merch
-                                </Tab>
-                                <Tab
-                                    setPosition={setPosition}
-                                    href={'/dashboard'}
-                                >
-                                    Quiz
-                                </Tab>
-
-                                <Tab setPosition={setPosition} href='#'>
+                            <NavigationMenuList className='lowercase'>
+                                <Tab href={'/home'}>Home</Tab>
+                                <div className='flex items-center gap-2 hover:underline'>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button
                                                 variant='ghost'
-                                                className='text-md rounded-full uppercase'
+                                                className='cursor-pointer text-sm'
                                             >
-                                                Gallery{' '}
+                                                gallery{' '}
                                                 <ChevronDown className='ml-2 h-4 w-4' />
                                             </Button>
                                         </DropdownMenuTrigger>
@@ -283,59 +185,43 @@ const Navbar = () => {
                                             ))}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
-                                </Tab>
-
-                                <Cursor position={position} />
-
-                                {/* <Tab setPosition={setPosition} href='#'>
-                                    <SignIn />
-                                </Tab> */}
+                                </div>
+                                <Tab href={'/dashboard'}>Quiz</Tab>
+                                <AuthButtons />
                             </NavigationMenuList>
                         </div>
                     </NavigationMenu>
+                    <Link
+                        href='#'
+                        className='hidden items-center rounded-lg bg-[#F5E4F9] p-2.5 lg:flex'
+                    >
+                        <Image
+                            src='/images/minive/logo.png'
+                            alt='IVE Logo'
+                            width={96}
+                            height={96}
+                            className='rounded-full'
+                        />
+                    </Link>
                 </div>
             </div>
         </header>
     )
 }
 
-const Tab = ({ children, setPosition, href }: TabProps) => {
-    const ref = useRef<HTMLLIElement>(null)
-
+const Tab = ({ children, href }: TabProps) => {
     return (
         <NavigationMenuLink asChild>
-            <li
-                ref={ref}
-                onMouseEnter={() => {
-                    if (!ref?.current) return
-                    const { width } = ref.current.getBoundingClientRect()
-                    setPosition({
-                        left: ref.current.offsetLeft,
-                        width,
-                        opacity: 1,
-                    })
-                }}
-            >
+            <li>
                 <Link
                     href={href}
-                    className='relative z-[999] rounded-full px-6'
+                    className='relative z-[999] rounded-full px-6 hover:underline'
                     prefetch={false}
                 >
                     {children}
                 </Link>
             </li>
         </NavigationMenuLink>
-    )
-}
-
-const Cursor = ({ position }: CursorProps) => {
-    return (
-        <motion.div
-            animate={{
-                ...position,
-            }}
-            className='absolute z-0 h-9 -translate-x-1 rounded-full bg-black'
-        />
     )
 }
 

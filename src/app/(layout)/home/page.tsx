@@ -1,7 +1,7 @@
 import Hero from '@/components/Home/Hero'
 import React from 'react'
 
-const Home = () => {
+const Home = async () => {
     return (
         <>
             <Hero />
