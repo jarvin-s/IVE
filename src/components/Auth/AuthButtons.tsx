@@ -37,7 +37,7 @@ export function AuthButtons() {
                 <Button
                     variant='ghost'
                     size='sm'
-                    className='cursor-pointer lowercase hover:underline'
+                    className='lowercase hover:underline'
                 >
                     Login
                 </Button>

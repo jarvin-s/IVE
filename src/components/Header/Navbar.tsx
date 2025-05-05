@@ -132,7 +132,7 @@ const Navbar = () => {
                                     </DropdownMenu>
                                 </div>
                                 <Link
-                                    href={'/dashboard'}
+                                    href={'/quiz'}
                                     className='flex w-full items-center justify-center py-2 text-lg hover:underline'
                                     prefetch={false}
                                     onClick={() => setIsOpen(false)}
@@ -153,7 +153,7 @@ const Navbar = () => {
                                         <DropdownMenuTrigger asChild>
                                             <Button
                                                 variant='ghost'
-                                                className='cursor-pointer text-sm'
+                                                className='text-sm'
                                             >
                                                 gallery{' '}
                                                 <ChevronDown className='ml-2 h-4 w-4' />
@@ -186,7 +186,7 @@ const Navbar = () => {
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>
-                                <Tab href={'/dashboard'}>Quiz</Tab>
+                                <Tab href={'/quiz'}>Quiz</Tab>
                                 <AuthButtons />
                             </NavigationMenuList>
                         </div>
