@@ -1,9 +1,9 @@
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/server'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { userId } = await auth()
 
     const { data: pastQuizzes, error: pastQuizzesError } = await supabase

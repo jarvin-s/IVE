@@ -1,6 +1,6 @@
 'use client'
 
-import React, { use, useEffect, useState } from 'react'
+import React, { use, useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Game from '@/components/Quiz/Game'
@@ -31,8 +31,13 @@ export default function GamePage({
     const router = useRouter()
     const { user } = useUser()
     const { id } = use(params)
+    const hasFetched = useRef(false)
 
+    //! FIX DATES IN ANSWERS
     useEffect(() => {
+        if (hasFetched.current) return
+        hasFetched.current = true
+
         async function fetchSession() {
             const { data: existingSession } = await supabase
                 .from('quiz_sessions')

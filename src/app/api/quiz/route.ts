@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/utils/supabase/server'
 
 function shuffleArray<T>(array: T[]): T[] {
     for (let i = array.length - 1; i > 0; i--) {
@@ -10,7 +10,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export async function GET() {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { data: questions, error } = await supabase
         .from('random_questions')
@@ -29,7 +29,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { quizId, currentQuestion, score, completed, answerHistory } =
         await request.json()
 
