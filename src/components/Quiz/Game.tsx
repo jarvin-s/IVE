@@ -3,7 +3,34 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
+import { Bebas_Neue } from 'next/font/google'
+
+const bebasNeue = Bebas_Neue({
+    weight: '400',
+    subsets: ['latin'],
+})
+
+const Progress = ({
+    value,
+    className,
+    indicatorClassName,
+}: {
+    value: number
+    className?: string
+    indicatorClassName?: string
+}) => {
+    return (
+        <div
+            className={`relative w-full overflow-hidden rounded-full ${className || ''}`}
+        >
+            <div
+                className={`h-full ${indicatorClassName || ''}`}
+                style={{ width: `${value}%` }}
+            />
+        </div>
+    )
+}
 
 interface QuizProps {
     questions: {
@@ -25,7 +52,7 @@ interface QuizProps {
 }
 
 export default function Game({
-    questions,
+    questions: quizQuestions,
     quizId,
     initialQuestion,
     initialScore,
@@ -35,6 +62,7 @@ export default function Game({
     const [score, setScore] = useState(initialScore)
     const [selectedAnswer, setSelectedAnswer] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [answered, setAnswered] = useState(false)
     const [answerHistory, setAnswerHistory] = useState<
         Array<{
             quizId: string
@@ -43,19 +71,27 @@ export default function Game({
             correct: boolean
         }>
     >(initialAnswerHistory)
-    const nextQuestion = currentQuestion +  1
-    const isCompleted = nextQuestion > questions.length
+    const [highlightedOption, setHighlightedOption] = useState<string | null>(
+        null
+    )
+    const nextQuestion = currentQuestion + 1
+    const isCompleted = nextQuestion > quizQuestions.length
 
-    const handleAnswerClick = (answer: string) => {
-        setSelectedAnswer(answer)
-    }
+    const handleAnswerSelect = useCallback(
+        (answer: string) => {
+            if (answered) return
+            setSelectedAnswer(answer)
+            setAnswered(true)
+        },
+        [answered]
+    )
 
-    const handleNext = useCallback(async () => {
+    const handleNextQuestion = useCallback(async () => {
         if (isSubmitting) return
         setIsSubmitting(true)
 
         const isCorrect =
-            selectedAnswer === questions[currentQuestion].correct_answer
+            selectedAnswer === quizQuestions[currentQuestion].correct_answer
 
         const newScore = isCorrect ? score + 1 : score
         setScore(newScore)
@@ -65,7 +101,7 @@ export default function Game({
             {
                 quizId,
                 userAnswer: selectedAnswer,
-                correctAnswer: questions[currentQuestion].correct_answer,
+                correctAnswer: quizQuestions[currentQuestion].correct_answer,
                 correct: isCorrect,
             },
         ])
@@ -79,28 +115,30 @@ export default function Game({
                 quizId,
                 currentQuestion: nextQuestion,
                 score: newScore,
-                completed: nextQuestion >= questions.length,
+                completed: nextQuestion >= quizQuestions.length,
                 answerHistory: [
                     ...answerHistory,
                     {
                         quizId,
                         userAnswer: selectedAnswer,
                         correctAnswer:
-                            questions[currentQuestion].correct_answer,
+                            quizQuestions[currentQuestion].correct_answer,
                         correct: isCorrect,
                     },
                 ],
             }),
         })
 
-        if (currentQuestion < questions.length) {
+        if (currentQuestion < quizQuestions.length) {
             setCurrentQuestion(nextQuestion)
             setSelectedAnswer('')
+            setAnswered(false)
+            setHighlightedOption(null)
         }
         setIsSubmitting(false)
     }, [
         currentQuestion,
-        questions,
+        quizQuestions,
         selectedAnswer,
         score,
         quizId,
@@ -127,6 +165,8 @@ export default function Game({
         })
         setCurrentQuestion(0)
         setScore(0)
+        setAnswered(false)
+        setHighlightedOption(null)
     }
 
     useEffect(() => {
@@ -134,20 +174,49 @@ export default function Game({
             if (isCompleted) return
 
             const key = event.key
-            if (key === 'Enter' && selectedAnswer && !isSubmitting) {
-                handleNext()
+
+            if (key === 'Enter') {
+                if (answered && !isSubmitting) {
+                    handleNextQuestion()
+                } else if (highlightedOption && !answered) {
+                    handleAnswerSelect(highlightedOption)
+                }
+                return
             }
-            if (key === '1') {
-                handleAnswerClick(questions[currentQuestion].options[0])
-            }
-            if (key === '2') {
-                handleAnswerClick(questions[currentQuestion].options[1])
-            }
-            if (key === '3') {
-                handleAnswerClick(questions[currentQuestion].options[2])
-            }
-            if (key === '4') {
-                handleAnswerClick(questions[currentQuestion].options[3])
+
+            if (!answered) {
+                if (
+                    key === '1' &&
+                    quizQuestions[currentQuestion].options.length >= 1
+                ) {
+                    setHighlightedOption(
+                        quizQuestions[currentQuestion].options[0]
+                    )
+                }
+                if (
+                    key === '2' &&
+                    quizQuestions[currentQuestion].options.length >= 2
+                ) {
+                    setHighlightedOption(
+                        quizQuestions[currentQuestion].options[1]
+                    )
+                }
+                if (
+                    key === '3' &&
+                    quizQuestions[currentQuestion].options.length >= 3
+                ) {
+                    setHighlightedOption(
+                        quizQuestions[currentQuestion].options[2]
+                    )
+                }
+                if (
+                    key === '4' &&
+                    quizQuestions[currentQuestion].options.length >= 4
+                ) {
+                    setHighlightedOption(
+                        quizQuestions[currentQuestion].options[3]
+                    )
+                }
             }
         }
 
@@ -157,144 +226,171 @@ export default function Game({
             document.removeEventListener('keydown', handleKeyDown)
         }
     }, [
-        handleNext,
-        questions,
+        handleNextQuestion,
+        handleAnswerSelect,
+        quizQuestions,
         currentQuestion,
         selectedAnswer,
         isCompleted,
         isSubmitting,
+        answered,
+        highlightedOption,
     ])
 
-    return (
-        <div className='mt-20 flex flex-col items-center justify-center bg-stone-950 p-10 md:p-40'>
-            <div className='w-full text-center text-white'>
-                {isCompleted ? (
-                    <>
-                        <div className='fixed top-2 left-2'>
-                            <Button
-                                asChild
-                                variant={'default'}
-                                size={'sm'}
-                                className='bg-pink-800 text-white hover:bg-pink-700'
-                            >
-                                <Link href={`/dashboard`}>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        width='24'
-                                        height='24'
-                                        viewBox='0 0 24 24'
-                                    >
-                                        <path
-                                            fill='currentColor'
-                                            d='M12.707 17.293L8.414 13H18v-2H8.414l4.293-4.293l-1.414-1.414L4.586 12l6.707 6.707z'
-                                        />
-                                    </svg>
-                                    Dashboard
-                                </Link>
-                            </Button>
-                        </div>
-                        <div className='text-center'>
-                            <h2 className='mb-4 text-2xl'>Quiz completed</h2>
-                            <div>
-                                <h2 className='mb-4 text-2xl'>Your score</h2>
+    return isCompleted ? (
+        <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 p-6'>
+            <div className='w-full max-w-md rounded-3xl border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
+                <h2 className='mb-6 text-center text-2xl font-bold text-pink-700'>
+                    Quiz Completed
+                </h2>
+                <p className='mb-6 text-center text-xl'>
+                    Your Score:{' '}
+                    <span className='font-bold text-pink-600'>
+                        {score}/{quizQuestions.length}
+                    </span>
+                </p>
+                <div className='flex justify-center gap-4'>
+                    <Button
+                        onClick={handleRestart}
+                        className='rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                    >
+                        Play Again
+                    </Button>
+                    <Button
+                        asChild
+                        className='rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                    >
+                        <Link href={`/dashboard/config`}>New Quiz</Link>
+                    </Button>
+                </div>
+                <div className='mt-6 text-center'>
+                    <Button
+                        asChild
+                        variant='outline'
+                        className='border-pink-300 text-pink-600'
+                    >
+                        <Link href='/dashboard'>Back to Dashboard</Link>
+                    </Button>
+                </div>
+            </div>
+        </div>
+    ) : (
+        <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
+            <header className='flex w-full justify-center px-6 py-4'>
+                <h1
+                    className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
+                >
+                    IVE QUIZ
+                </h1>
+            </header>
+
+            <main className='flex flex-1 flex-col items-center justify-center p-6'>
+                <div className='w-full max-w-md'>
+                    <div className='mb-6 flex items-center justify-between'>
+                        <span className='text-xl font-bold text-pink-700'>
+                            Question:{' '}
+                            <span className='font-medium'>
+                                {currentQuestion + 1}/{quizQuestions.length}
+                            </span>
+                        </span>
+                        <span className='text-xl font-bold text-pink-700'>
+                            Score: <span className='font-medium'>{score}</span>
+                        </span>
+                    </div>
+
+                    <Progress
+                        value={(currentQuestion / quizQuestions.length) * 100}
+                        className='h-2 bg-pink-200'
+                        indicatorClassName='bg-gradient-to-r from-pink-500 to-pink-600'
+                    />
+
+                    <div className='relative mt-8'>
+                        <div className='relative overflow-hidden rounded-lg border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
+                            <h2 className='mb-6 text-center text-xl font-bold text-pink-700 md:text-2xl'>
+                                {quizQuestions[currentQuestion].question}
+                            </h2>
+
+                            <div className='space-y-3'>
+                                {quizQuestions[currentQuestion].options.map(
+                                    (option, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() =>
+                                                handleAnswerSelect(option)
+                                            }
+                                            className={`w-full cursor-pointer rounded-xl p-4 text-left transition-all ${
+                                                answered &&
+                                                option ===
+                                                    quizQuestions[
+                                                        currentQuestion
+                                                    ].correct_answer
+                                                    ? 'border-2 border-green-600 bg-green-100 text-green-800'
+                                                    : selectedAnswer === option
+                                                      ? option ===
+                                                        quizQuestions[
+                                                            currentQuestion
+                                                        ].correct_answer
+                                                          ? 'border-2 border-green-600 bg-green-100 text-green-800'
+                                                          : 'border-2 border-red-400 bg-red-100 text-red-800'
+                                                      : option ===
+                                                          highlightedOption
+                                                        ? 'border-2 border-pink-500 bg-pink-50 text-black'
+                                                        : 'border-2 border-pink-100 bg-white/70 text-black hover:border-pink-500'
+                                            }`}
+                                            disabled={answered}
+                                        >
+                                            <div className='flex items-center'>
+                                                <div
+                                                    className={`mr-3 flex h-6 w-6 items-center justify-center rounded-full ${
+                                                        answered &&
+                                                        option ===
+                                                            quizQuestions[
+                                                                currentQuestion
+                                                            ].correct_answer
+                                                            ? 'bg-green-600 text-white'
+                                                            : selectedAnswer ===
+                                                                option
+                                                              ? option ===
+                                                                quizQuestions[
+                                                                    currentQuestion
+                                                                ].correct_answer
+                                                                  ? 'border-2 border-green-600 bg-green-100 text-green-800'
+                                                                  : 'bg-red-500 text-white'
+                                                              : option ===
+                                                                  highlightedOption
+                                                                ? 'bg-pink-300 text-pink-700'
+                                                                : 'bg-pink-100 text-pink-500'
+                                                    }`}
+                                                >
+                                                    {String.fromCharCode(
+                                                        65 + index
+                                                    )}
+                                                </div>
+                                                {option}
+                                            </div>
+                                        </button>
+                                    )
+                                )}
                             </div>
-                            <div className='flex justify-center gap-4'>
-                                <Button
-                                    onClick={handleRestart}
-                                    className='inline-flex items-center justify-center rounded-lg bg-pink-800 px-4 py-5 text-xl text-white hover:bg-pink-700'
-                                >
-                                    Play again
-                                </Button>
-                                <Button
-                                    asChild
-                                    className='inline-flex items-center justify-center rounded-lg bg-pink-800 px-4 py-5 text-xl text-white hover:bg-pink-700'
-                                >
-                                    <Link href={`/dashboard/config`}>
-                                        New quiz
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className='fixed top-2 left-2'>
-                            <Button
-                                asChild
-                                variant={'default'}
-                                size={'sm'}
-                                className='bg-pink-800 text-white hover:bg-pink-700'
-                            >
-                                <Link href={`/dashboard`}>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        width='24'
-                                        height='24'
-                                        viewBox='0 0 24 24'
+
+                            {answered && (
+                                <div className='mt-6 flex justify-end'>
+                                    <Button
+                                        onClick={handleNextQuestion}
+                                        className='flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                                     >
-                                        <path
-                                            fill='currentColor'
-                                            d='M12.707 17.293L8.414 13H18v-2H8.414l4.293-4.293l-1.414-1.414L4.586 12l6.707 6.707z'
-                                        />
-                                    </svg>
-                                    Dashboard
-                                </Link>
-                            </Button>
-                        </div>
-                        <h2 className='mb-4 text-xl'>
-                            Question {currentQuestion + 1} of {questions.length}
-                        </h2>
-                        <div className='mb-6'>
-                            {questions[currentQuestion].image && (
-                                <div className='flex justify-center'>
-                                    <Image
-                                        src={
-                                            questions[currentQuestion].image ||
-                                            '/default-image.png'
-                                        }
-                                        alt='Question Image'
-                                        width={400}
-                                        height={200}
-                                        className='mb-4 rounded-lg'
-                                    />
+                                        {currentQuestion <
+                                        quizQuestions.length - 1
+                                            ? 'Next Question'
+                                            : 'See Results'}
+                                        <ArrowRight className='h-4 w-4' />
+                                    </Button>
                                 </div>
                             )}
-                            <p className='text-2xl font-bold md:text-3xl'>
-                                {questions[currentQuestion].question}
-                            </p>
                         </div>
-                        <div className='mb-6 grid w-full grid-cols-1 gap-4 md:grid-cols-2'>
-                            {questions[currentQuestion].options.map(
-                                (option, index) => (
-                                    <Button
-                                        key={option}
-                                        onClick={() =>
-                                            handleAnswerClick(option)
-                                        }
-                                        className={`flex w-full items-center rounded-lg p-8 text-left text-xl ${
-                                            selectedAnswer === option
-                                                ? 'bg-pink-800 text-white'
-                                                : 'bg-stone-800 hover:bg-stone-700'
-                                        }`}
-                                    >
-                                        <div className='mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md border border-white/20 md:mr-5 md:h-10 md:w-10'>
-                                            {index + 1}
-                                        </div>
-                                        <span className='flex-1'>{option}</span>
-                                    </Button>
-                                )
-                            )}
-                        </div>
-                        <Button
-                            onClick={handleNext}
-                            disabled={!selectedAnswer || isSubmitting}
-                            className='inline-flex w-full items-center justify-center rounded-lg bg-pink-800 px-4 py-5 text-xl text-white hover:bg-pink-700 disabled:opacity-50'
-                        >
-                            Next
-                        </Button>
-                    </>
-                )}
-            </div>
+                    </div>
+                </div>
+            </main>
         </div>
     )
 }
