@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { StarIcon, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
@@ -63,9 +63,6 @@ export default function Dashboard() {
                 <h1 className='text-3xl font-bold tracking-wider text-pink-600 md:text-4xl'>
                     Dashboard
                 </h1>
-                <div className='absolute top-4 right-4 md:top-6 md:right-8'>
-                    <StarIcon className='h-6 w-6 text-pink-500' />
-                </div>
             </header>
 
             <main className='flex-1 p-6'>

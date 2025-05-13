@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { StarIcon } from 'lucide-react'
 import { redirect, useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
 import { useUser } from '@clerk/nextjs'
@@ -23,15 +22,9 @@ export default function Home() {
     return (
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
-                <div className='absolute top-4 left-4 md:top-6 md:left-8'>
-                    <StarIcon className='h-6 w-6 text-pink-500' />
-                </div>
                 <h1 className='text-3xl font-bold tracking-wider text-pink-600 md:text-4xl'>
                     IVE QUIZ
                 </h1>
-                <div className='absolute top-4 right-4 md:top-6 md:right-8'>
-                    <StarIcon className='h-6 w-6 text-pink-500' />
-                </div>
             </header>
 
             <main className='flex flex-1 flex-col items-center justify-center p-6 text-center'>
