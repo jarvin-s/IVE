@@ -80,11 +80,16 @@ export default function Game({
     const handleAnswerSelect = useCallback(
         (answer: string) => {
             if (answered) return
-            setSelectedAnswer(answer)
-            setAnswered(true)
+            setHighlightedOption(answer)
         },
         [answered]
     )
+
+    const handleSubmitAnswer = useCallback(() => {
+        if (answered || !highlightedOption) return
+        setSelectedAnswer(highlightedOption)
+        setAnswered(true)
+    }, [answered, highlightedOption])
 
     const handleNextQuestion = useCallback(async () => {
         if (isSubmitting) return
@@ -179,7 +184,7 @@ export default function Game({
                 if (answered && !isSubmitting) {
                     handleNextQuestion()
                 } else if (highlightedOption && !answered) {
-                    handleAnswerSelect(highlightedOption)
+                    handleSubmitAnswer()
                 }
                 return
             }
@@ -227,7 +232,7 @@ export default function Game({
         }
     }, [
         handleNextQuestion,
-        handleAnswerSelect,
+        handleSubmitAnswer,
         quizQuestions,
         currentQuestion,
         selectedAnswer,
@@ -252,13 +257,13 @@ export default function Game({
                 <div className='flex justify-center gap-4'>
                     <Button
                         onClick={handleRestart}
-                        className='rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                     >
                         Play Again
                     </Button>
                     <Button
                         asChild
-                        className='rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                     >
                         <Link href={`/dashboard/config`}>New Quiz</Link>
                     </Button>
@@ -372,6 +377,17 @@ export default function Game({
                                     )
                                 )}
                             </div>
+
+                            {highlightedOption && !answered && (
+                                <div className='mt-6 flex justify-end'>
+                                    <Button
+                                        onClick={handleSubmitAnswer}
+                                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                                    >
+                                        Submit Answer
+                                    </Button>
+                                </div>
+                            )}
 
                             {answered && (
                                 <div className='mt-6 flex justify-end'>
