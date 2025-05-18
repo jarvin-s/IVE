@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button'
 import { redirect, useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
 import { useUser } from '@clerk/nextjs'
+import { Bebas_Neue } from 'next/font/google'
+
+const bebasNeue = Bebas_Neue({
+    weight: '400',
+    subsets: ['latin'],
+})
 
 export default function Home() {
     const user = useUser()
@@ -22,7 +28,9 @@ export default function Home() {
     return (
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
-                <h1 className='text-3xl font-bold tracking-wider text-pink-600 md:text-4xl'>
+                <h1
+                    className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
+                >
                     IVE QUIZ
                 </h1>
             </header>
@@ -59,14 +67,16 @@ export default function Home() {
                                         Dashboard
                                     </Button>
                                 </Link>
+                                <Link href='/home' className='block w-full'>
+                                    <Button
+                                        variant='outline'
+                                        className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                    >
+                                        Home
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
-                    </div>
-
-                    <div className='mt-12 flex justify-center space-x-4'>
-                        <div className='h-2 w-2 animate-pulse rounded-full bg-pink-400'></div>
-                        <div className='h-2 w-2 animate-pulse rounded-full bg-pink-500 delay-100'></div>
-                        <div className='h-2 w-2 animate-pulse rounded-full bg-pink-600 delay-200'></div>
                     </div>
                 </div>
             </main>

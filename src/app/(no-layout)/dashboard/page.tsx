@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
@@ -46,6 +46,17 @@ export default function Dashboard() {
         fetchPastQuizzes()
     }, [])
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString)
+        return new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        }).format(date)
+    }
+
     return (
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
@@ -60,7 +71,7 @@ export default function Dashboard() {
                         </Button>
                     </Link>
                 </div>
-                <h1 className='text-3xl font-bold tracking-wider text-pink-600 md:text-4xl'>
+                <h1 className='text-3xl font-bold text-pink-600 md:text-7xl'>
                     Dashboard
                 </h1>
             </header>
@@ -90,6 +101,9 @@ export default function Dashboard() {
                                             <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
                                                 Actions
                                             </th>
+                                            <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
+                                                Completed
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className='divide-y divide-pink-100'>
@@ -99,24 +113,51 @@ export default function Dashboard() {
                                                 className='hover:bg-pink-50'
                                             >
                                                 <td className='px-4 py-3 text-sm whitespace-nowrap text-gray-700'>
-                                                    {quiz.created_at}
+                                                    {formatDate(
+                                                        quiz.created_at
+                                                    )}
                                                 </td>
                                                 <td className='px-4 py-3 text-sm font-medium whitespace-nowrap text-gray-700'>
                                                     {quiz.score} / 10
                                                 </td>
-                                                <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
-                                                    <Link
-                                                        href={`/quiz-details/${quiz.session_id}`}
-                                                    >
-                                                        <Button
-                                                            variant='outline'
-                                                            size='sm'
-                                                            className='rounded-lg border-pink-200 text-pink-600 hover:bg-pink-50'
+                                                {!quiz.completed ? (
+                                                    <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
+                                                        <Link
+                                                            href={`/quiz/${quiz.session_id}`}
                                                         >
-                                                            Details
-                                                        </Button>
-                                                    </Link>
-                                                </td>
+                                                            <Button
+                                                                variant='outline'
+                                                                size='sm'
+                                                                className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                            >
+                                                                Continue
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                ) : (
+                                                    <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
+                                                        <Link
+                                                            href={`/quiz-details/${quiz.session_id}`}
+                                                        >
+                                                            <Button
+                                                                variant='outline'
+                                                                size='sm'
+                                                                className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                            >
+                                                                Details
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                )}
+                                                {quiz.completed ? (
+                                                    <td className='flex justify-center px-4 py-3 text-sm'>
+                                                        <CheckCircle2 className='h-5 w-5 text-green-600' />
+                                                    </td>
+                                                ) : (
+                                                    <td className='flex justify-center px-4 py-3 text-sm'>
+                                                        <XCircle className='h-5 w-5 text-red-600' />
+                                                    </td>
+                                                )}
                                             </tr>
                                         ))}
                                     </tbody>
@@ -129,7 +170,7 @@ export default function Dashboard() {
                                 </p>
                                 <div className='mt-4'>
                                     <Link href='/quiz'>
-                                        <Button className='rounded-lg bg-pink-500 px-6 py-2 text-white hover:bg-pink-600'>
+                                        <Button className='rounded-md bg-pink-500 px-6 py-2 text-white hover:bg-pink-600'>
                                             Take a Quiz
                                         </Button>
                                     </Link>
@@ -138,13 +179,7 @@ export default function Dashboard() {
                         )}
                     </div>
 
-                    <div className='grid gap-6 md:grid-cols-2'>
-                        <div className='rounded-2xl bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
-                            <h3 className='mb-4 text-xl font-bold text-pink-700'>
-                                Quiz Stats
-                            </h3>
-                        </div>
-
+                    <div className='max-w-4xl'>
                         <div className='rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 p-6 text-white shadow-lg'>
                             <h3 className='mb-4 text-xl font-bold'>
                                 Quick Links
@@ -152,13 +187,13 @@ export default function Dashboard() {
                             <div className='space-y-3'>
                                 <Link
                                     href='/quiz'
-                                    className='block rounded-xl bg-white/10 p-4 transition-all hover:bg-white/20'
+                                    className='block rounded-md bg-white/10 p-4 transition-all hover:bg-white/20'
                                 >
                                     Take a New Quiz
                                 </Link>
                                 <Link
                                     href='/leaderboard'
-                                    className='block rounded-xl bg-white/10 p-4 transition-all hover:bg-white/20'
+                                    className='block rounded-md bg-white/10 p-4 transition-all hover:bg-white/20'
                                 >
                                     Leaderboard
                                 </Link>
@@ -169,7 +204,9 @@ export default function Dashboard() {
             </main>
 
             <footer className='py-4 text-center text-sm text-pink-700'>
-                <p>Made with 💖 for DIVE (IVE&apos;s fandom)</p>
+                <p>
+                    Made with 💖 for <strong>DIVE</strong>
+                </p>
             </footer>
         </div>
     )
