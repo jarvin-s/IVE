@@ -13,12 +13,6 @@
     }
 }
 
-
-
-::selection {
-    background-color: #b8034b;
-}
-
 /* Firefox (scrollbar) */
 * {
     scrollbar-width: thin;
