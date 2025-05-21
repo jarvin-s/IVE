@@ -34,11 +34,7 @@ export function AuthButtons() {
                     },
                 }}
             >
-                <Button
-                    variant='ghost'
-                    size='sm'
-                    className='lowercase hover:underline'
-                >
+                <Button variant='ghost' size='sm' className='hover:underline'>
                     Login
                 </Button>
             </SignInButton>

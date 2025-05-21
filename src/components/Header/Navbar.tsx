@@ -1,54 +1,72 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import {
-    Sheet,
-    SheetTrigger,
-    SheetContent,
-    SheetTitle,
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
-import {
-    NavigationMenu,
-    NavigationMenuList,
-    NavigationMenuLink,
-} from '@/components/ui/navigation-menu'
-import { AuthButtons } from '../Auth/AuthButtons'
+import { usePathname } from 'next/navigation'
+import { ChevronDown, ImageIcon, Music, Star } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ChevronDown } from 'lucide-react'
+import { AuthButtons } from '../Auth/AuthButtons'
+import { Button } from '../ui/button'
+import { Bebas_Neue } from 'next/font/google'
 
-interface TabProps {
-    children: React.ReactNode
-    href: string
-}
+const bebas_neue = Bebas_Neue({
+    subsets: ['latin'],
+    weight: ['400'],
+})
 
-const Navbar = () => {
-    const [scrolled, setScrolled] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
+const galleryItems = [
+    { name: 'Photos', href: '/gallery/photos', icon: ImageIcon },
+    { name: 'Music Videos', href: '/gallery/videos', icon: Music },
+    { name: 'Performances', href: '/gallery/performances', icon: Star },
+]
+
+export function Navbar() {
+    const pathname = usePathname()
+    const [isOpen, setIsOpen] = useState(true)
+    const [showGalleryDropdown, setShowGalleryDropdown] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+    const galleryBtnRef = useRef<HTMLButtonElement>(null)
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen)
+        if (!isOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'auto'
+        }
+    }
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50)
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownRef.current &&
+                galleryBtnRef.current &&
+                !dropdownRef.current.contains(event.target as Node) &&
+                !galleryBtnRef.current.contains(event.target as Node)
+            ) {
+                setShowGalleryDropdown(false)
+            }
         }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
     }, [])
 
+    const isActive = (path: string) => {
+        if (path === '/') {
+            return pathname === path
+        }
+        return pathname?.startsWith(path)
+    }
+
     return (
-        <header
-            className={`fixed top-0 z-50 w-full bg-transparent py-4 ${
-                scrolled ? 'backdrop-blur-md' : ''
-            }`}
-        >
-            <div className='container mx-auto px-4'>
-                <div className='flex h-16 items-center justify-between lg:justify-between'>
+        <nav className='sticky top-0 z-50 w-full py-2 text-white'>
+            <div className='mx-auto max-w-7xl px-4'>
+                <div className='flex items-center justify-between p-4'>
+                    {/* Logo */}
                     <Link href={'/'} className='flex items-center'>
                         <Image
                             src='/images/logo.png'
@@ -59,141 +77,85 @@ const Navbar = () => {
                         />
                     </Link>
 
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild>
-                            <Button
-                                variant='ghost'
-                                size='icon'
-                                className='lg:hidden'
+                    {/* Desktop Navigation */}
+                    <div className='hidden flex-1 md:block'>
+                        <div className='flex items-center justify-center space-x-8'>
+                            <Link
+                                href='/'
+                                className={cn(
+                                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                    isActive('/')
+                                        ? 'bg-pink-200/70'
+                                        : 'hover:underline'
+                                )}
                             >
-                                <MenuIcon className='h-10 w-8' />
-                                <span className='sr-only'>
-                                    Toggle navigation menu
-                                </span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent
-                            side='top'
-                            className='h-[100dvh] w-full bg-pink-950 pt-16 text-white'
-                        >
-                            <Link href='#' prefetch={false}>
-                                <span className='sr-only'>
-                                    <SheetTitle className='text-7xl'>
-                                        Menu
-                                    </SheetTitle>
-                                    DIVE INTO IVE
-                                </span>
+                                Home
                             </Link>
-                            <div className='grid gap-2 py-6'>
-                                <Link
-                                    href={'/home'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Home
-                                </Link>
-                                <div className='flex justify-center py-2 text-lg hover:underline'>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant='ghost'
-                                                className='text-md'
-                                            >
-                                                Gallery{' '}
-                                                <ChevronDown className='ml-2 h-4 w-4' />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className='w-56 rounded-md bg-zinc-950 text-white shadow-lg'>
-                                            {[
-                                                { name: 'rei', icon: '🐥' },
-                                                { name: 'gaeul', icon: '🐿️' },
-                                                { name: 'yujin', icon: '🐶' },
-                                                { name: 'liz', icon: '🐱' },
-                                                { name: 'leeseo', icon: '🐯' },
-                                                {
-                                                    name: 'wonyoung',
-                                                    icon: '🐰',
-                                                },
-                                            ].map(({ name, icon }) => (
-                                                <DropdownMenuItem
-                                                    asChild
-                                                    key={name}
-                                                >
-                                                    <Link
-                                                        href={`/gallery/${name}`}
-                                                        className='flex items-center gap-2 rounded-md px-4 py-2 transition duration-300 hover:bg-zinc-800 hover:text-white'
-                                                    >
-                                                        {icon} {name}
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            ))}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                                <Link
-                                    href={'/quiz'}
-                                    className='flex w-full items-center justify-center py-2 text-lg hover:underline'
-                                    prefetch={false}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Quiz
-                                </Link>
-                                <AuthButtons />
-                            </div>
-                        </SheetContent>
-                    </Sheet>
 
-                    <NavigationMenu className='hidden text-white lg:flex'>
-                        <div className='flex items-center gap-8'>
-                            <NavigationMenuList className='lowercase'>
-                                <Tab href={'/home'}>Home</Tab>
-                                <div className='flex items-center gap-2 hover:underline'>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                variant='ghost'
-                                                className='text-sm'
+                            {/* Gallery Dropdown */}
+                            <div className='relative'>
+                                <Button
+                                    ref={galleryBtnRef}
+                                    onClick={() =>
+                                        setShowGalleryDropdown(
+                                            !showGalleryDropdown
+                                        )
+                                    }
+                                    variant='ghost'
+                                    className={cn(
+                                        'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                        isActive('/gallery')
+                                            ? 'bg-pink-200/70'
+                                            : 'hover:underline'
+                                    )}
+                                >
+                                    Gallery
+                                    <ChevronDown
+                                        className={cn(
+                                            'ml-1 h-4 w-4 transition-transform duration-200',
+                                            showGalleryDropdown && 'rotate-180'
+                                        )}
+                                    />
+                                </Button>
+
+                                {showGalleryDropdown && (
+                                    <div
+                                        ref={dropdownRef}
+                                        className='animate-in fade-in slide-in-from-top-5 absolute right-0 mt-2 w-48 rounded-xl bg-white py-1 shadow-lg ring-1 ring-pink-200 duration-200 focus:outline-none'
+                                    >
+                                        {galleryItems.map((item) => (
+                                            <Link
+                                                key={item.name}
+                                                href={item.href}
+                                                className='flex items-center px-4 py-2 text-sm hover:bg-pink-50'
                                             >
-                                                gallery{' '}
-                                                <ChevronDown className='ml-2 h-4 w-4' />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className='w-56 rounded-md bg-zinc-950 text-white shadow-lg'>
-                                            {[
-                                                { name: 'rei', icon: '🐥' },
-                                                { name: 'gaeul', icon: '🐿️' },
-                                                { name: 'yujin', icon: '🐶' },
-                                                { name: 'liz', icon: '🐱' },
-                                                { name: 'leeseo', icon: '🐯' },
-                                                {
-                                                    name: 'wonyoung',
-                                                    icon: '🐰',
-                                                },
-                                            ].map(({ name, icon }) => (
-                                                <DropdownMenuItem
-                                                    asChild
-                                                    key={name}
-                                                >
-                                                    <Link
-                                                        href={`/gallery/${name}`}
-                                                        className='flex items-center gap-2 rounded-md px-4 py-2 transition duration-300 hover:bg-zinc-800 hover:text-white'
-                                                    >
-                                                        {icon} {name}
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            ))}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                                <Tab href={'/quiz'}>Quiz</Tab>
-                                <AuthButtons />
-                            </NavigationMenuList>
+                                                <item.icon className='mr-2 h-4 w-4 text-pink-500' />
+                                                {item.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <Link
+                                href='/quiz'
+                                className={cn(
+                                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                    isActive('/quiz')
+                                        ? 'bg-pink-200/70'
+                                        : 'hover:underline'
+                                )}
+                            >
+                                Quiz
+                            </Link>
+
+                            <AuthButtons />
                         </div>
-                    </NavigationMenu>
+                    </div>
+
                     <Link
                         href='#'
-                        className='hidden items-center rounded-lg bg-[#F5E4F9] p-2.5 lg:flex'
+                        className='hidden items-center rounded-lg bg-[#F5E4F9] p-2.5 md:flex'
                     >
                         <Image
                             src='/images/minive/logo.png'
@@ -203,46 +165,172 @@ const Navbar = () => {
                             className='rounded-full'
                         />
                     </Link>
+
+                    {/* Mobile menu button */}
+                    <div className='md:hidden'>
+                        <Button
+                            className='group z-[60] flex h-10 flex-col justify-center space-y-1 duration-300 ease-in-out md:hidden'
+                            onClick={toggleMenu}
+                            aria-label='Toggle menu'
+                            variant='ghost'
+                        >
+                            <div className='relative flex h-2 w-6 justify-end'>
+                                <span
+                                    className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
+                                        isOpen ? 'rotate-45' : ''
+                                    }`}
+                                ></span>
+                                <span
+                                    className={`absolute block h-[2px] bg-white/60 transition-all duration-300 ${
+                                        isOpen
+                                            ? 'w-6 -rotate-45'
+                                            : 'ml-auto w-4 translate-y-[6px] group-hover:w-6'
+                                    }`}
+                                ></span>
+                                <span
+                                    className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
+                                        isOpen
+                                            ? 'opacity-0'
+                                            : '-translate-y-[6px] opacity-0'
+                                    }`}
+                                ></span>
+                            </div>
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </header>
-    )
-}
 
-const Tab = ({ children, href }: TabProps) => {
-    return (
-        <NavigationMenuLink asChild>
-            <li>
-                <Link
-                    href={href}
-                    className='relative z-[999] rounded-full px-6 hover:underline'
-                    prefetch={false}
+            {/* Mobile menu */}
+            <div
+                className={cn(
+                    'fixed inset-0 z-40 bg-black transition-all duration-300 ease-in-out md:hidden',
+                    isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+                )}
+            >
+                <div className='flex items-center justify-between p-8'>
+                    <Link href={'/'} className='flex items-center'>
+                        <Image
+                            src='/images/logo.png'
+                            alt='IVE Logo'
+                            width={65}
+                            height={65}
+                            className='rounded-full'
+                        />
+                    </Link>
+                    <Button
+                        className='group z-[60] flex h-10 flex-col justify-center space-y-1 duration-300 ease-in-out'
+                        onClick={toggleMenu}
+                        aria-label='Toggle menu'
+                        variant='ghost'
+                    >
+                        <div className='relative flex h-2 w-6 justify-end'>
+                            <span
+                                className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
+                                    isOpen ? 'rotate-45' : ''
+                                }`}
+                            ></span>
+                            <span
+                                className={`absolute block h-[2px] bg-white/60 transition-all duration-300 ${
+                                    isOpen
+                                        ? 'w-6 -rotate-45'
+                                        : 'ml-auto w-4 translate-y-[6px] group-hover:w-6'
+                                }`}
+                            ></span>
+                            <span
+                                className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
+                                    isOpen
+                                        ? 'opacity-0'
+                                        : '-translate-y-[6px] opacity-0'
+                                }`}
+                            ></span>
+                        </div>
+                    </Button>
+                </div>
+                <div
+                    className={`${bebas_neue.className} flex h-full flex-col items-center space-y-8 px-4`}
                 >
-                    {children}
-                </Link>
-            </li>
-        </NavigationMenuLink>
-    )
-}
+                    <Link
+                        href='/'
+                        className={cn(
+                            'block rounded-md px-3 py-2 text-8xl text-white',
+                            isActive('/')
+                                ? 'bg-pink-100 text-black'
+                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
+                        )}
+                    >
+                        Home
+                    </Link>
 
-function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            {...props}
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-        >
-            <line x1='4' x2='20' y1='12' y2='12' />
-            <line x1='4' x2='20' y1='6' y2='6' />
-            <line x1='4' x2='20' y1='18' y2='18' />
-        </svg>
+                    {/* Gallery Dropdown */}
+                    {/* <div>
+                        <button
+                            onClick={() =>
+                                setShowGalleryDropdown(!showGalleryDropdown)
+                            }
+                            className={cn(
+                                'flex w-full items-center justify-between rounded-md px-3 py-2 text-9xl text-white',
+                                isActive('/gallery')
+                                    ? 'bg-pink-100 text-black'
+                                    : 'hover:underline'
+                            )}
+                        >
+                            <span>Gallery</span>
+                            <ChevronDown
+                                className={cn(
+                                    'h-5 w-5 text-white transition-transform duration-200',
+                                    showGalleryDropdown && 'rotate-180'
+                                )}
+                            />
+                        </button>
+
+                        <div
+                            className={cn(
+                                'overflow-hidden pl-4 transition-all duration-200 ease-in-out',
+                                showGalleryDropdown
+                                    ? 'mt-1 mb-2 max-h-48'
+                                    : 'max-h-0'
+                            )}
+                        >
+                            {galleryItems.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className='flex items-center rounded-md px-3 py-2 text-xl text-white hover:bg-pink-50 hover:text-black'
+                                >
+                                    <item.icon className='mr-2 h-5 w-5 text-pink-500' />
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div> */}
+
+                    <Link
+                        href='/gallery'
+                        className={cn(
+                            'block rounded-md px-3 py-2 text-9xl text-white',
+                            isActive('/gallery')
+                                ? 'bg-pink-100 text-black'
+                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
+                        )}
+                    >
+                        Gallery
+                    </Link>
+                    <Link
+                        href='/quiz'
+                        className={cn(
+                            'block rounded-md px-3 py-2 text-9xl text-white',
+                            isActive('/quiz')
+                                ? 'bg-pink-100 text-black'
+                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
+                        )}
+                    >
+                        Quiz
+                    </Link>
+
+                    <AuthButtons />
+                </div>
+            </div>
+        </nav>
     )
 }
 

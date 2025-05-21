@@ -51,6 +51,7 @@ body {
     border-radius: 2vmin;
 }
 
+/* Clerk elements */
 .cl-internal-1dauvpw {
     display: none;
 }
@@ -61,4 +62,15 @@ body {
 
 .cl-userButtonPopoverActionButton__manageAccount {
     display: none;
+}
+
+.cl-userButtonPopoverCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.cl-internal-1grbo8b {
+    max-width: 100%;
 }

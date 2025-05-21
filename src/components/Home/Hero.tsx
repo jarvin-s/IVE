@@ -14,16 +14,20 @@ const bebas_neue = Bebas_Neue({
 const Hero = () => {
     return (
         <>
-            <div className='relative flex h-dvh w-screen flex-col items-center justify-center overflow-x-hidden text-white'>
-                <h1
-                    className={`${bebas_neue.className} text-center text-[5rem] leading-none md:text-[14rem]`}
-                >
-                    DIVE INTO IVE
-                </h1>
-                <div className='flex flex-col items-center'>
-                    <h1 className={`${poppins.className} text-center text-sm md:text-lg`}>
-                        4TH GENERATION K-POP SENSATION
+            <div className='relative flex w-screen flex-col items-center justify-center overflow-x-hidden text-white'>
+                <div className='mt-40 overflow-hidden'>
+                    <h1
+                        className={`${bebas_neue.className} text-center text-[5rem] leading-none md:text-[14rem]`}
+                    >
+                        DIVE INTO IVE
                     </h1>
+                    <div className='flex flex-col items-center'>
+                        <h1
+                            className={`${poppins.className} text-center text-sm md:text-lg`}
+                        >
+                            4TH GENERATION K-POP SENSATION
+                        </h1>
+                    </div>
                 </div>
             </div>
             {/* IVE SHOWCASE VIDEO (I AM) */}
