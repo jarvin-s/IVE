@@ -64,13 +64,18 @@ body {
     display: none;
 }
 
-.cl-userButtonPopoverCard {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
+@media (max-width: 768px) {
+    .cl-rootBox {
+        display: none;
+    }
+    .cl-userButtonPopoverCard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
 
-.cl-internal-1grbo8b {
-    max-width: 100%;
+    .cl-internal-1grbo8b {
+        max-width: 100%;
+    }
 }
