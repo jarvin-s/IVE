@@ -88,80 +88,89 @@ export default function Dashboard() {
                                 <div className='h-6 w-6 animate-spin rounded-full border-2 border-pink-500 border-t-transparent'></div>
                             </div>
                         ) : completedQuizzes.length > 0 ? (
-                            <div className='overflow-hidden rounded-xl border border-pink-100'>
-                                <table className='w-full'>
-                                    <thead className='bg-pink-50'>
-                                        <tr>
-                                            <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
-                                                Date
-                                            </th>
-                                            <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
-                                                Score
-                                            </th>
-                                            <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
-                                                Actions
-                                            </th>
-                                            <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
-                                                Completed
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className='divide-y divide-pink-100'>
-                                        {completedQuizzes.map((quiz) => (
-                                            <tr
-                                                key={quiz.session_id}
-                                                className='hover:bg-pink-50'
-                                            >
-                                                <td className='px-4 py-3 text-sm whitespace-nowrap text-gray-700'>
-                                                    {formatDate(
-                                                        quiz.created_at
-                                                    )}
-                                                </td>
-                                                <td className='px-4 py-3 text-sm font-medium whitespace-nowrap text-gray-700'>
-                                                    {quiz.score} / 10
-                                                </td>
-                                                {!quiz.completed ? (
-                                                    <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
-                                                        <Link
-                                                            href={`/quiz/${quiz.session_id}`}
+                            <div className='overflow-x-auto'>
+                                <div className='inline-block min-w-full align-middle'>
+                                    <div className='overflow-hidden rounded-xl border border-pink-100'>
+                                        <table className='min-w-full'>
+                                            <thead className='bg-pink-50'>
+                                                <tr>
+                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
+                                                        Date
+                                                    </th>
+                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
+                                                        Score
+                                                    </th>
+                                                    <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
+                                                        Actions
+                                                    </th>
+                                                    <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
+                                                        Completed
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className='divide-y divide-pink-100'>
+                                                {completedQuizzes.map(
+                                                    (quiz) => (
+                                                        <tr
+                                                            key={
+                                                                quiz.session_id
+                                                            }
+                                                            className='hover:bg-pink-50'
                                                         >
-                                                            <Button
-                                                                variant='outline'
-                                                                size='sm'
-                                                                className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
-                                                            >
-                                                                Continue
-                                                            </Button>
-                                                        </Link>
-                                                    </td>
-                                                ) : (
-                                                    <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
-                                                        <Link
-                                                            href={`/quiz-details/${quiz.session_id}`}
-                                                        >
-                                                            <Button
-                                                                variant='outline'
-                                                                size='sm'
-                                                                className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
-                                                            >
-                                                                Details
-                                                            </Button>
-                                                        </Link>
-                                                    </td>
+                                                            <td className='px-4 py-3 text-sm whitespace-nowrap text-gray-700'>
+                                                                {formatDate(
+                                                                    quiz.created_at
+                                                                )}
+                                                            </td>
+                                                            <td className='px-4 py-3 text-sm font-medium whitespace-nowrap text-gray-700'>
+                                                                {quiz.score} /
+                                                                10
+                                                            </td>
+                                                            {!quiz.completed ? (
+                                                                <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
+                                                                    <Link
+                                                                        href={`/quiz/${quiz.session_id}`}
+                                                                    >
+                                                                        <Button
+                                                                            variant='outline'
+                                                                            size='sm'
+                                                                            className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                                        >
+                                                                            Continue
+                                                                        </Button>
+                                                                    </Link>
+                                                                </td>
+                                                            ) : (
+                                                                <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
+                                                                    <Link
+                                                                        href={`/quiz-details/${quiz.session_id}`}
+                                                                    >
+                                                                        <Button
+                                                                            variant='outline'
+                                                                            size='sm'
+                                                                            className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                                        >
+                                                                            Details
+                                                                        </Button>
+                                                                    </Link>
+                                                                </td>
+                                                            )}
+                                                            {quiz.completed ? (
+                                                                <td className='flex justify-center px-4 py-3 text-sm'>
+                                                                    <CheckCircle2 className='h-5 w-5 text-green-600' />
+                                                                </td>
+                                                            ) : (
+                                                                <td className='flex justify-center px-4 py-3 text-sm'>
+                                                                    <XCircle className='h-5 w-5 text-red-600' />
+                                                                </td>
+                                                            )}
+                                                        </tr>
+                                                    )
                                                 )}
-                                                {quiz.completed ? (
-                                                    <td className='flex justify-center px-4 py-3 text-sm'>
-                                                        <CheckCircle2 className='h-5 w-5 text-green-600' />
-                                                    </td>
-                                                ) : (
-                                                    <td className='flex justify-center px-4 py-3 text-sm'>
-                                                        <XCircle className='h-5 w-5 text-red-600' />
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             <div className='rounded-xl border border-pink-100 bg-pink-50 py-12 text-center'>

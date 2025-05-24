@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { Bebas_Neue } from 'next/font/google'
 
 const bebasNeue = Bebas_Neue({
@@ -257,15 +257,15 @@ export default function Game({
                 <div className='flex justify-center gap-4'>
                     <Button
                         onClick={handleRestart}
-                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                     >
                         Play Again
                     </Button>
                     <Button
                         asChild
-                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                     >
-                        <Link href={`/dashboard/config`}>New Quiz</Link>
+                        <Link href={`/quiz`}>New Quiz</Link>
                     </Button>
                 </div>
                 <div className='mt-6 text-center'>
@@ -281,7 +281,18 @@ export default function Game({
         </div>
     ) : (
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
-            <header className='flex w-full justify-center px-6 py-4'>
+            <header className='relative flex w-full justify-center px-6 py-4'>
+                <div className='absolute top-4 left-4 md:top-6 md:left-8'>
+                    <Link href='/dashboard'>
+                        <Button
+                            variant='ghost'
+                            size='icon'
+                            className='rounded-full'
+                        >
+                            <ArrowLeft className='h-5 w-5 text-pink-600' />
+                        </Button>
+                    </Link>
+                </div>
                 <h1
                     className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
                 >

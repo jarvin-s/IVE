@@ -23,7 +23,7 @@ const galleryItems = [
 
 export function Navbar() {
     const pathname = usePathname()
-    const [isOpen, setIsOpen] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
     const [showGalleryDropdown, setShowGalleryDropdown] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null)
     const galleryBtnRef = useRef<HTMLButtonElement>(null)

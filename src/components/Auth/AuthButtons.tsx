@@ -26,13 +26,8 @@ export function AuthButtons() {
     return (
         <div className='flex items-center gap-4'>
             <SignInButton
-                mode='modal'
-                appearance={{
-                    elements: {
-                        rootBox: 'mx-auto',
-                        footer: 'hidden',
-                    },
-                }}
+                mode='redirect'
+                fallbackRedirectUrl='/sign-in'
             >
                 <Button variant='ghost' size='sm' className='hover:underline'>
                     Login
