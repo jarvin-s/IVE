@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { use, useEffect, useState } from 'react'
@@ -138,14 +138,14 @@ export default function QuizDetails({
                                         <div className='flex items-center space-x-2'>
                                             {quizDetails.completed ? (
                                                 <>
-                                                    <CheckCircle className='h-4 w-4 text-green-600' />
+                                                    <CheckCircle2 className='h-5 w-5 text-green-600' />
                                                     <p className='font-medium text-green-600'>
                                                         Completed
                                                     </p>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <XCircle className='h-4 w-4 text-red-600' />
+                                                    <XCircle className='h-5 w-5 text-red-600' />
                                                     <p className='font-medium text-red-600'>
                                                         Incomplete
                                                     </p>
@@ -196,7 +196,7 @@ export default function QuizDetails({
                                                         <div className='flex items-start space-x-2'>
                                                             <div className='shrink-0 pt-1'>
                                                                 {answer?.correct ? (
-                                                                    <CheckCircle className='h-5 w-5 text-green-600' />
+                                                                    <CheckCircle2 className='h-5 w-5 text-green-600' />
                                                                 ) : (
                                                                     <XCircle className='h-5 w-5 text-red-600' />
                                                                 )}
@@ -209,7 +209,7 @@ export default function QuizDetails({
                                                                     }
                                                                 </p>
                                                                 {answer && (
-                                                                    <div className='mt-2 text-sm space-y-1'>
+                                                                    <div className='mt-2 space-y-1 text-sm'>
                                                                         <p className='text-gray-600'>
                                                                             <span className='font-medium'>
                                                                                 Your
@@ -272,7 +272,7 @@ export default function QuizDetails({
                             </p>
                             <div className='mt-4'>
                                 <Link href='/dashboard'>
-                                    <Button className='bg-pink-500 hover:bg-pink-600 text-white'>
+                                    <Button className='bg-pink-500 text-white hover:bg-pink-600'>
                                         Back to Dashboard
                                     </Button>
                                 </Link>

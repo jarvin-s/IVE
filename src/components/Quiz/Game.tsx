@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { Bebas_Neue } from 'next/font/google'
+import { useUser } from '@clerk/nextjs'
 
 const bebasNeue = Bebas_Neue({
     weight: '400',
@@ -58,6 +59,7 @@ export default function Game({
     initialScore,
     initialAnswerHistory = [],
 }: QuizProps) {
+    const { user } = useUser()
     const [currentQuestion, setCurrentQuestion] = useState(initialQuestion)
     const [score, setScore] = useState(initialScore)
     const [selectedAnswer, setSelectedAnswer] = useState('')
@@ -254,28 +256,40 @@ export default function Game({
                         {score}/{quizQuestions.length}
                     </span>
                 </p>
-                <div className='flex justify-center gap-4'>
-                    <Button
-                        onClick={handleRestart}
-                        className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
-                    >
-                        Play Again
-                    </Button>
-                    <Button
-                        asChild
-                        className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
-                    >
-                        <Link href={`/quiz`}>New Quiz</Link>
-                    </Button>
-                </div>
-                <div className='mt-6 text-center'>
-                    <Button
-                        asChild
-                        variant='outline'
-                        className='border-pink-300 text-pink-600'
-                    >
-                        <Link href='/dashboard'>Back to Dashboard</Link>
-                    </Button>
+                <div className='flex flex-col items-center gap-4'>
+                    <div className='flex gap-4'>
+                        <Button
+                            onClick={handleRestart}
+                            className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        >
+                            Play Again
+                        </Button>
+                        <Button
+                            asChild
+                            className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                        >
+                            <Link href={`/quiz`}>New Quiz</Link>
+                        </Button>
+                    </div>
+                    <div className='flex flex-col items-center gap-4'>
+                        {user ? (
+                            <Button
+                                asChild
+                                variant='outline'
+                                className='border-pink-300 text-pink-600'
+                            >
+                                <Link href='/dashboard'>Back to Dashboard</Link>
+                            </Button>
+                        ) : (
+                            <Button
+                                asChild
+                                variant='outline'
+                                className='border-pink-300 text-pink-600'
+                            >
+                                <Link href='/home'>Back to Home</Link>
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
@@ -389,10 +403,11 @@ export default function Game({
                                 )}
                             </div>
 
-                            {highlightedOption && !answered && (
+                            {!answered && (
                                 <div className='mt-6 flex justify-end'>
                                     <Button
                                         onClick={handleSubmitAnswer}
+                                        disabled={!highlightedOption}
                                         className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                                     >
                                         Submit Answer
