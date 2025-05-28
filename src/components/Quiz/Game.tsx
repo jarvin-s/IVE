@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { Bebas_Neue } from 'next/font/google'
 import { useUser } from '@clerk/nextjs'
+import Image from 'next/image'
 
 const bebasNeue = Bebas_Neue({
     weight: '400',
@@ -336,6 +337,20 @@ export default function Game({
 
                     <div className='relative mt-8'>
                         <div className='relative overflow-hidden rounded-lg border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
+                            {quizQuestions[currentQuestion].image && (
+                                <div className='flex justify-center'>
+                                    <Image
+                                        src={
+                                            quizQuestions[currentQuestion]
+                                                .image || '/default-image.png'
+                                        }
+                                        alt='Question Image'
+                                        width={400}
+                                        height={200}
+                                        className='mb-4 rounded-lg'
+                                    />
+                                </div>
+                            )}
                             <h2 className='mb-6 text-center text-xl font-bold text-pink-700 md:text-2xl'>
                                 {quizQuestions[currentQuestion].question}
                             </h2>
