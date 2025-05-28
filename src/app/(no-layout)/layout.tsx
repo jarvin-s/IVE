@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter_Tight } from 'next/font/google'
 import '@/app/globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter_tight = Inter_Tight({
     weight: ['200', '300', '400', '500', '600', '700', '800'],
@@ -32,7 +33,10 @@ export default async function RootLayout({
     return (
         <ClerkProvider>
             <html lang={locale}>
-                <body className={`${inter_tight.className}`}>{children}</body>
+                <body className={`${inter_tight.className}`}>
+                    {children}
+                    <Analytics />
+                </body>
             </html>
         </ClerkProvider>
     )
