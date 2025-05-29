@@ -1,9 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { ChevronDown, ImageIcon, Music, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { AuthButtons } from '../Auth/AuthButtons'
@@ -15,18 +13,8 @@ const bebas_neue = Bebas_Neue({
     weight: ['400'],
 })
 
-const galleryItems = [
-    { name: 'Photos', href: '/gallery/photos', icon: ImageIcon },
-    { name: 'Music Videos', href: '/gallery/videos', icon: Music },
-    { name: 'Performances', href: '/gallery/performances', icon: Star },
-]
-
 export function Navbar() {
-    const pathname = usePathname()
     const [isOpen, setIsOpen] = useState(false)
-    const [showGalleryDropdown, setShowGalleryDropdown] = useState(false)
-    const dropdownRef = useRef<HTMLDivElement>(null)
-    const galleryBtnRef = useRef<HTMLButtonElement>(null)
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
@@ -35,31 +23,6 @@ export function Navbar() {
         } else {
             document.body.style.overflow = 'auto'
         }
-    }
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                galleryBtnRef.current &&
-                !dropdownRef.current.contains(event.target as Node) &&
-                !galleryBtnRef.current.contains(event.target as Node)
-            ) {
-                setShowGalleryDropdown(false)
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [])
-
-    const isActive = (path: string) => {
-        if (path === '/') {
-            return pathname === path
-        }
-        return pathname?.startsWith(path)
     }
 
     return (
@@ -79,71 +42,20 @@ export function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className='hidden flex-1 md:block'>
-                        <div className='flex items-center justify-center space-x-8'>
+                        <div className='flex items-center justify-center space-x-8 uppercase'>
                             <Link
                                 href='/'
                                 className={cn(
-                                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                                    isActive('/')
-                                        ? 'bg-pink-200/70'
-                                        : 'hover:underline'
+                                    'rounded-md px-3 py-2 text-3xl font-bold transition-colors hover:text-pink-600'
                                 )}
                             >
                                 Home
                             </Link>
 
-                            {/* Gallery Dropdown */}
-                            <div className='relative'>
-                                <Button
-                                    ref={galleryBtnRef}
-                                    onClick={() =>
-                                        setShowGalleryDropdown(
-                                            !showGalleryDropdown
-                                        )
-                                    }
-                                    variant='ghost'
-                                    className={cn(
-                                        'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                                        isActive('/gallery')
-                                            ? 'bg-pink-200/70'
-                                            : 'hover:underline'
-                                    )}
-                                >
-                                    Gallery
-                                    <ChevronDown
-                                        className={cn(
-                                            'ml-1 h-4 w-4 transition-transform duration-200',
-                                            showGalleryDropdown && 'rotate-180'
-                                        )}
-                                    />
-                                </Button>
-
-                                {showGalleryDropdown && (
-                                    <div
-                                        ref={dropdownRef}
-                                        className='animate-in fade-in slide-in-from-top-5 absolute right-0 mt-2 w-48 rounded-xl bg-white py-1 shadow-lg ring-1 ring-pink-200 duration-200 focus:outline-none'
-                                    >
-                                        {galleryItems.map((item) => (
-                                            <Link
-                                                key={item.name}
-                                                href={item.href}
-                                                className='flex items-center px-4 py-2 text-sm hover:bg-pink-50'
-                                            >
-                                                <item.icon className='mr-2 h-4 w-4 text-pink-500' />
-                                                {item.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
                             <Link
                                 href='/quiz'
                                 className={cn(
-                                    'rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                                    isActive('/quiz')
-                                        ? 'bg-pink-200/70'
-                                        : 'hover:underline'
+                                    'rounded-md px-3 py-2 text-3xl font-bold transition-colors hover:text-pink-600'
                                 )}
                             >
                                 Quiz
@@ -252,76 +164,15 @@ export function Navbar() {
                     <Link
                         href='/'
                         className={cn(
-                            'block rounded-md px-3 py-2 text-8xl text-white',
-                            isActive('/')
-                                ? 'bg-pink-100 text-black'
-                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
+                            'block rounded-md px-3 py-2 text-9xl text-white transition-colors hover:text-pink-600'
                         )}
                     >
                         Home
                     </Link>
-
-                    {/* Gallery Dropdown */}
-                    {/* <div>
-                        <button
-                            onClick={() =>
-                                setShowGalleryDropdown(!showGalleryDropdown)
-                            }
-                            className={cn(
-                                'flex w-full items-center justify-between rounded-md px-3 py-2 text-9xl text-white',
-                                isActive('/gallery')
-                                    ? 'bg-pink-100 text-black'
-                                    : 'hover:underline'
-                            )}
-                        >
-                            <span>Gallery</span>
-                            <ChevronDown
-                                className={cn(
-                                    'h-5 w-5 text-white transition-transform duration-200',
-                                    showGalleryDropdown && 'rotate-180'
-                                )}
-                            />
-                        </button>
-
-                        <div
-                            className={cn(
-                                'overflow-hidden pl-4 transition-all duration-200 ease-in-out',
-                                showGalleryDropdown
-                                    ? 'mt-1 mb-2 max-h-48'
-                                    : 'max-h-0'
-                            )}
-                        >
-                            {galleryItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className='flex items-center rounded-md px-3 py-2 text-xl text-white hover:bg-pink-50 hover:text-black'
-                                >
-                                    <item.icon className='mr-2 h-5 w-5 text-pink-500' />
-                                    {item.name}
-                                </Link>
-                            ))}
-                        </div>
-                    </div> */}
-
-                    <Link
-                        href='/gallery'
-                        className={cn(
-                            'block rounded-md px-3 py-2 text-9xl text-white',
-                            isActive('/gallery')
-                                ? 'bg-pink-100 text-black'
-                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
-                        )}
-                    >
-                        Gallery
-                    </Link>
                     <Link
                         href='/quiz'
                         className={cn(
-                            'block rounded-md px-3 py-2 text-9xl text-white',
-                            isActive('/quiz')
-                                ? 'bg-pink-100 text-black'
-                                : 'transition-all duration-150 ease-in-out hover:text-pink-900'
+                            'block rounded-md px-3 py-2 text-9xl text-white transition-colors hover:text-pink-600'
                         )}
                     >
                         Quiz

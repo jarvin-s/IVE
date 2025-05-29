@@ -65,9 +65,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .cl-rootBox {
-        display: none;
-    }
     .cl-userButtonPopoverCard {
         display: flex;
         justify-content: center;

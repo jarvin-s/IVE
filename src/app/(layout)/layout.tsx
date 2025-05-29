@@ -11,6 +11,7 @@ const inter_tight = Inter_Tight({
 })
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://diveintoive.world'),
     title: 'IVE 아이브 | DIVE INTO IVE',
     description:
         'A collection of stats, insights, and a fun quiz for IVE fans to enjoy!',
