@@ -1,9 +1,8 @@
 'use client'
 
-import { useAuth } from '@clerk/nextjs'
+import { SignInButton, useAuth } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
-import Link from 'next/link'
 
 export function AuthButtons() {
     const { isSignedIn, isLoaded } = useAuth()
@@ -26,11 +25,15 @@ export function AuthButtons() {
 
     return (
         <div className='flex items-center gap-4'>
-            <Link href='/sign-in'>
-                <Button variant='ghost' size='sm' className='hover:underline'>
+            <SignInButton mode='modal'>
+                <Button
+                    variant='ghost'
+                    size='sm'
+                    className='mt-16 text-9xl font-bold uppercase hover:text-pink-600 md:mt-0 md:text-3xl'
+                >
                     Login
                 </Button>
-            </Link>
+            </SignInButton>
         </div>
     )
 }
