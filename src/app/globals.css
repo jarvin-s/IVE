@@ -60,10 +60,6 @@ body {
     display: none;
 }
 
-.cl-userButtonPopoverActionButton__manageAccount {
-    display: none;
-}
-
 @media (max-width: 768px) {
     .cl-userButtonPopoverCard {
         display: flex;
