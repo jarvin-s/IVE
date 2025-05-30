@@ -78,7 +78,7 @@ export default function Dashboard() {
 
             <main className='flex-1 p-6'>
                 <div className='mx-auto max-w-4xl'>
-                    <div className='mb-8 rounded-2xl bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
+                    <div className='mb-8 rounded-md bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
                         <h2 className='mb-6 text-2xl font-bold text-pink-700'>
                             Your Quiz Results
                         </h2>
@@ -90,7 +90,7 @@ export default function Dashboard() {
                         ) : completedQuizzes.length > 0 ? (
                             <div className='overflow-x-auto'>
                                 <div className='inline-block min-w-full align-middle'>
-                                    <div className='overflow-hidden rounded-xl border border-pink-100'>
+                                    <div className='overflow-hidden rounded-md border border-pink-100'>
                                         <table className='min-w-full'>
                                             <thead className='bg-pink-50'>
                                                 <tr>
@@ -173,7 +173,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
                         ) : (
-                            <div className='rounded-xl border border-pink-100 bg-pink-50 py-12 text-center'>
+                            <div className='rounded-md border border-pink-100 bg-pink-50 py-12 text-center'>
                                 <p className='text-gray-600'>
                                     You haven&apos;t completed any quizzes yet!
                                 </p>
@@ -189,7 +189,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className='max-w-4xl'>
-                        <div className='rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 p-6 text-white shadow-lg'>
+                        <div className='rounded-md bg-gradient-to-br from-pink-500 to-purple-600 p-6 text-white shadow-lg'>
                             <h3 className='mb-4 text-xl font-bold'>
                                 Quick Links
                             </h3>

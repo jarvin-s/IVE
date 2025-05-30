@@ -22,7 +22,7 @@ export default function Home() {
     }
 
     return (
-        <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
+        <div className='flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
                 <h1
                     className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
