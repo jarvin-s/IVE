@@ -23,7 +23,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         if (isLoaded && !user) {
-            redirect('/sign-in')
+            redirect('/')
         }
     }, [user, isLoaded])
 

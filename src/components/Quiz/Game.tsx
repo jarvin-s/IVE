@@ -287,7 +287,7 @@ export default function Game({
                                 variant='outline'
                                 className='border-pink-300 text-pink-600'
                             >
-                                <Link href='/home'>Back to Home</Link>
+                                <Link href='/'>Back to Home</Link>
                             </Button>
                         )}
                     </div>

@@ -65,7 +65,7 @@ export default function Home() {
                                         </Button>
                                     </Link>
                                 )}
-                                <Link href='/home' className='block w-full'>
+                                <Link href='/' className='block w-full'>
                                     <Button
                                         variant='outline'
                                         className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
