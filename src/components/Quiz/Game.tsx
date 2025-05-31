@@ -287,7 +287,7 @@ export default function Game({
                                 variant='outline'
                                 className='border-pink-300 text-pink-600'
                             >
-                                <Link href='/home'>Back to Home</Link>
+                                <Link href='/'>Back to Home</Link>
                             </Button>
                         )}
                     </div>
@@ -298,7 +298,7 @@ export default function Game({
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
                 <div className='absolute top-4 left-4 md:top-6 md:left-8'>
-                    <Link href='/dashboard'>
+                    <Link href={user ? '/dashboard' : '/quiz'}>
                         <Button
                             variant='ghost'
                             size='icon'

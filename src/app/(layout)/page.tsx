@@ -1,7 +1,9 @@
-import Hero from '@/components/Home/Hero'
-import React from 'react'
+'use client'
 
-const Home = async () => {
+import React from 'react'
+import Hero from '@/components/Home/Hero'
+
+const Home = () => {
     return (
         <>
             <Hero />

@@ -60,11 +60,13 @@ body {
     display: none;
 }
 
-.cl-userButtonPopoverActionButton__manageAccount {
-    display: none;
-}
-
 @media (max-width: 768px) {
+    .cl-avatarBox {
+        display: flex;
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
     .cl-userButtonPopoverCard {
         display: flex;
         justify-content: center;

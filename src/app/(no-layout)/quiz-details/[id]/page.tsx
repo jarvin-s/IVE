@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, Trash2 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { use, useEffect, useState } from 'react'
@@ -41,6 +41,7 @@ export default function QuizDetails({
     const { user, isLoaded } = useUser()
     const [quizDetails, setQuizDetails] = useState<QuizDetails | null>(null)
     const [loading, setLoading] = useState(true)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { id } = use(params)
 
     useEffect(() => {
@@ -82,6 +83,24 @@ export default function QuizDetails({
         }).format(date)
     }
 
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`/api/quiz-details?id=${id}`, {
+                method: 'DELETE',
+            })
+
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(data.error || 'Failed to delete quiz')
+            }
+
+            window.location.href = '/dashboard'
+        } catch (error) {
+            console.error('Failed to delete quiz:', error)
+            alert('Failed to delete quiz. Please try again.')
+        }
+    }
+
     return (
         <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
@@ -92,7 +111,7 @@ export default function QuizDetails({
                             size='icon'
                             className='rounded-full'
                         >
-                            <ArrowLeft className='h-5 w-5 text-pink-600' />
+                            <ArrowLeft className='text-pink-600' size={24} />
                         </Button>
                     </Link>
                 </div>
@@ -109,12 +128,12 @@ export default function QuizDetails({
                         </div>
                     ) : quizDetails ? (
                         <div className='space-y-6'>
-                            <div className='rounded-2xl bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
+                            <div className='rounded-md bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
                                     Summary
                                 </h2>
                                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                                    <div className='rounded-xl bg-pink-50 p-4'>
+                                    <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
                                             Date Taken
                                         </p>
@@ -122,7 +141,7 @@ export default function QuizDetails({
                                             {formatDate(quizDetails.created_at)}
                                         </p>
                                     </div>
-                                    <div className='rounded-xl bg-pink-50 p-4'>
+                                    <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
                                             Final Score
                                         </p>
@@ -131,7 +150,7 @@ export default function QuizDetails({
                                             {quizDetails.questions.length}
                                         </p>
                                     </div>
-                                    <div className='rounded-xl bg-pink-50 p-4'>
+                                    <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
                                             Status
                                         </p>
@@ -153,7 +172,7 @@ export default function QuizDetails({
                                             )}
                                         </div>
                                     </div>
-                                    <div className='rounded-xl bg-pink-50 p-4'>
+                                    <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
                                             Percentage
                                         </p>
@@ -170,7 +189,7 @@ export default function QuizDetails({
                                 </div>
                             </div>
 
-                            <div className='rounded-2xl bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
+                            <div className='rounded-md bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
                                     Question Review
                                 </h2>
@@ -187,7 +206,7 @@ export default function QuizDetails({
                                                 return (
                                                     <div
                                                         key={question.id}
-                                                        className={`rounded-xl p-4 ${
+                                                        className={`rounded-md p-4 ${
                                                             answer?.correct
                                                                 ? 'border border-green-100 bg-green-50'
                                                                 : 'border border-red-100 bg-red-50'
@@ -240,24 +259,35 @@ export default function QuizDetails({
                                         )}
                                     </div>
                                 ) : (
-                                    <div className='rounded-xl bg-pink-50 p-6 text-center'>
+                                    <div className='rounded-md bg-pink-50 p-6 text-center'>
                                         <p className='text-gray-600'>
                                             No question data available.
                                         </p>
                                     </div>
                                 )}
+                                <Button
+                                    variant='destructive'
+                                    onClick={() => setShowDeleteModal(true)}
+                                    className='mt-4 flex w-full items-center gap-2 bg-red-600 text-white hover:bg-red-500 md:w-auto'
+                                >
+                                    <Trash2 className='h-4 w-4' />
+                                    Delete Quiz
+                                </Button>
                             </div>
 
                             <div className='flex justify-center space-x-4'>
-                                <Link href='/dashboard'>
-                                    <Button className='bg-pink-500 text-white hover:bg-pink-600'>
+                                <Link
+                                    className='w-full md:w-auto'
+                                    href='/dashboard'
+                                >
+                                    <Button className='w-full bg-pink-500 text-white hover:bg-pink-600 md:w-auto'>
                                         Back to Dashboard
                                     </Button>
                                 </Link>
-                                <Link href='/quiz'>
+                                <Link className='w-full md:w-auto' href='/quiz'>
                                     <Button
                                         variant='outline'
-                                        className='border-pink-300 text-pink-700 hover:bg-pink-50'
+                                        className='w-full border-pink-300 text-pink-700 hover:bg-pink-50 md:w-auto'
                                     >
                                         Take Another Quiz
                                     </Button>
@@ -281,6 +311,36 @@ export default function QuizDetails({
                     )}
                 </div>
             </main>
+
+            {showDeleteModal && (
+                <div className='bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm'>
+                    <div className='mx-4 w-full max-w-md rounded-md bg-white p-6 shadow-xl'>
+                        <h3 className='mb-4 text-xl font-bold text-gray-900'>
+                            Delete Quiz
+                        </h3>
+                        <p className='mb-6 text-gray-600'>
+                            Are you sure you want to delete this quiz? This
+                            action cannot be undone.
+                        </p>
+                        <div className='flex justify-end space-x-3'>
+                            <Button
+                                variant='outline'
+                                onClick={() => setShowDeleteModal(false)}
+                                className='border-gray-300'
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant='destructive'
+                                onClick={handleDelete}
+                                className='bg-red-600 hover:bg-red-700'
+                            >
+                                Delete
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <footer className='py-4 text-center text-sm text-pink-700'>
                 <p>

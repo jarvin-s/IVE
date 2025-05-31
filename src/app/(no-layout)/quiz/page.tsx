@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
 import { useUser } from '@clerk/nextjs'
 import { Bebas_Neue } from 'next/font/google'
@@ -13,12 +13,8 @@ const bebasNeue = Bebas_Neue({
 })
 
 export default function Home() {
-    const user = useUser()
+    const { user, isLoaded } = useUser()
     const router = useRouter()
-
-    if (!user) {
-        redirect('/sign-in')
-    }
 
     const handleStartQuiz = () => {
         const quizId = uuidv4()
@@ -26,7 +22,7 @@ export default function Home() {
     }
 
     return (
-        <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
+        <div className='flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-b from-pink-100 to-pink-200'>
             <header className='relative flex w-full justify-center px-6 py-4'>
                 <h1
                     className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
@@ -56,18 +52,20 @@ export default function Home() {
                                 >
                                     Start Quiz
                                 </Button>
-                                <Link
-                                    href='/dashboard'
-                                    className='block w-full'
-                                >
-                                    <Button
-                                        variant='outline'
-                                        className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                {isLoaded && user && (
+                                    <Link
+                                        href='/dashboard'
+                                        className='block w-full'
                                     >
-                                        Dashboard
-                                    </Button>
-                                </Link>
-                                <Link href='/home' className='block w-full'>
+                                        <Button
+                                            variant='outline'
+                                            className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                        >
+                                            Dashboard
+                                        </Button>
+                                    </Link>
+                                )}
+                                <Link href='/' className='block w-full'>
                                     <Button
                                         variant='outline'
                                         className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
