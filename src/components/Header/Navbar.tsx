@@ -27,7 +27,7 @@ export function Navbar() {
 
     return (
         <nav className='sticky top-0 z-50 w-full py-2 text-white'>
-            <div className='mx-auto max-w-7xl px-4'>
+            <div className='mx-auto max-w-7xl'>
                 <div className='flex items-center justify-between p-4'>
                     {/* Logo */}
                     <Link href={'/'} className='flex items-center'>
@@ -46,7 +46,7 @@ export function Navbar() {
                             <Link
                                 href='/'
                                 className={cn(
-                                    'rounded-md px-3 py-2 text-3xl font-bold transition-colors hover:text-pink-600'
+                                    'rounded-md py-2 text-3xl font-bold transition-colors hover:text-pink-600'
                                 )}
                             >
                                 Home
@@ -60,26 +60,30 @@ export function Navbar() {
                             >
                                 Quiz
                             </Link>
-
-                            <AuthButtons />
                         </div>
                     </div>
 
-                    <Link
-                        href='#'
-                        className='hidden items-center rounded-lg bg-[#F5E4F9] p-2.5 md:flex'
-                    >
-                        <Image
-                            src='/images/minive/logo.png'
-                            alt='IVE Logo'
-                            width={96}
-                            height={96}
-                            className='rounded-full'
-                        />
-                    </Link>
+                    <div className='hidden items-center gap-4 md:flex'>
+                        <AuthButtons />
+                        {/* <Link
+                            href='#'
+                            className='hidden items-center rounded-lg bg-[#F5E4F9] p-2.5 md:flex'
+                        >
+                            <Image
+                                src='/images/minive/logo.png'
+                                alt='IVE Logo'
+                                width={96}
+                                height={96}
+                                className='rounded-full'
+                            />
+                        </Link> */}
+                    </div>
 
                     {/* Mobile menu button */}
-                    <div className='md:hidden'>
+                    <div
+                        className={cn('flex md:hidden', isOpen ? 'hidden' : '')}
+                    >
+                        <AuthButtons />
                         <Button
                             className='group z-[60] flex h-10 flex-col justify-center space-y-1 duration-300 ease-in-out md:hidden'
                             onClick={toggleMenu}
@@ -177,8 +181,6 @@ export function Navbar() {
                     >
                         Quiz
                     </Link>
-
-                    <AuthButtons />
                 </div>
             </div>
         </nav>

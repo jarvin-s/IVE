@@ -29,9 +29,9 @@ export function AuthButtons() {
                 <Button
                     variant='ghost'
                     size='sm'
-                    className='mt-16 text-9xl font-bold uppercase hover:text-pink-600 md:mt-0 md:text-3xl'
+                    className='font-bold hover:underline md:mt-0 md:text-lg'
                 >
-                    Login
+                    Sign in
                 </Button>
             </SignInButton>
         </div>
