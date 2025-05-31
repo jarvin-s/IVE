@@ -36,7 +36,7 @@ export default function Home() {
                     <div className='relative mb-8'>
                         <div className='absolute -top-12 -left-8 h-24 w-24 rounded-full bg-pink-300 opacity-50 blur-xl'></div>
                         <div className='absolute -right-8 -bottom-16 h-32 w-32 rounded-full bg-purple-300 opacity-40 blur-xl'></div>
-                        <div className='relative overflow-hidden rounded-3xl border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
+                        <div className='relative overflow-hidden rounded-md border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
                             <div className='absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-gradient-to-br from-pink-400 to-purple-400 opacity-20'></div>
                             <h2 className='mb-4 text-2xl font-bold text-pink-700 md:text-3xl'>
                                 How well do you know IVE?
@@ -48,7 +48,7 @@ export default function Home() {
                             <div className='space-y-4'>
                                 <Button
                                     onClick={handleStartQuiz}
-                                    className='w-full rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 py-6 text-lg text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                                    className='w-full rounded-md bg-gradient-to-r from-pink-500 to-pink-600 py-6 text-lg text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
                                 >
                                     Start Quiz
                                 </Button>
@@ -59,7 +59,7 @@ export default function Home() {
                                     >
                                         <Button
                                             variant='outline'
-                                            className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                            className='w-full rounded-md border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
                                         >
                                             Dashboard
                                         </Button>
@@ -68,7 +68,7 @@ export default function Home() {
                                 <Link href='/' className='block w-full'>
                                     <Button
                                         variant='outline'
-                                        className='w-full rounded-xl border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                        className='w-full rounded-md border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
                                     >
                                         Home
                                     </Button>
