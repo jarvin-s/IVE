@@ -102,47 +102,49 @@ export default function Game({
             selectedAnswer === quizQuestions[currentQuestion].correct_answer
 
         const newScore = isCorrect ? score + 1 : score
-        setScore(newScore)
-
-        setAnswerHistory((prev) => [
-            ...prev,
-            {
-                quizId,
-                userAnswer: selectedAnswer,
-                correctAnswer: quizQuestions[currentQuestion].correct_answer,
-                correct: isCorrect,
-            },
-        ])
-
-        await fetch('/api/quiz', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                quizId,
-                currentQuestion: nextQuestion,
-                score: newScore,
-                completed: nextQuestion >= quizQuestions.length,
-                answerHistory: [
-                    ...answerHistory,
-                    {
-                        quizId,
-                        userAnswer: selectedAnswer,
-                        correctAnswer:
-                            quizQuestions[currentQuestion].correct_answer,
-                        correct: isCorrect,
-                    },
-                ],
-            }),
-        })
-
-        if (currentQuestion < quizQuestions.length) {
-            setCurrentQuestion(nextQuestion)
-            setSelectedAnswer('')
-            setAnswered(false)
-            setHighlightedOption(null)
+        const newAnswerEntry = {
+            quizId,
+            userAnswer: selectedAnswer,
+            correctAnswer: quizQuestions[currentQuestion].correct_answer,
+            correct: isCorrect,
         }
+
+        setScore(newScore)
+        setAnswerHistory((prev) => [...prev, newAnswerEntry])
+
+        setCurrentQuestion(nextQuestion)
+        setSelectedAnswer('')
+        setAnswered(false)
+        setHighlightedOption(null)
+
+        try {
+            const response = await fetch('/api/quiz', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    quizId,
+                    currentQuestion: nextQuestion,
+                    score: newScore,
+                    completed: nextQuestion >= quizQuestions.length,
+                    answerHistory: [...answerHistory, newAnswerEntry],
+                }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to save progress')
+            }
+        } catch (error) {
+            console.error('Error saving quiz progress:', error)
+            setScore(score)
+            setAnswerHistory(answerHistory)
+            setCurrentQuestion(currentQuestion)
+            setSelectedAnswer(selectedAnswer)
+            setAnswered(true)
+            setHighlightedOption(selectedAnswer)
+        }
+
         setIsSubmitting(false)
     }, [
         currentQuestion,
