@@ -132,22 +132,11 @@ export default function Game({
                 }),
             })
 
-            console.log('Quiz API response status:', response.status)
-            
             if (!response.ok) {
-                const errorData = await response.text()
-                console.error('Quiz API error response:', errorData)
-                throw new Error(`API call failed: ${response.status} - ${errorData}`)
+                throw new Error('Failed to save progress')
             }
-
-            const responseData = await response.json()
-            console.log('Quiz API success response:', responseData)
         } catch (error) {
             console.error('Error saving quiz progress:', error)
-            
-            // Show user-friendly error message
-            alert(`Failed to save quiz progress: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your internet connection and try again.`)
-            
             setScore(score)
             setAnswerHistory(answerHistory)
             setCurrentQuestion(currentQuestion)
