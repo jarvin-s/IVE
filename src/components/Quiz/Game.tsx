@@ -141,9 +141,6 @@ export default function Game({
                     `API call failed: ${response.status} - ${errorData}`
                 )
             }
-
-            const responseData = await response.json()
-            console.log('Quiz API success response:', responseData)
         } catch (error) {
             console.error('Error saving quiz progress:', error)
 

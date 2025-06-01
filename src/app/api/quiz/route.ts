@@ -50,7 +50,6 @@ export async function PUT(request: Request) {
         console.log('Auth result:', { userId })
 
         if (!userId) {
-            console.log('No userId found, returning 401')
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
@@ -64,21 +63,13 @@ export async function PUT(request: Request) {
             return NextResponse.json({ error: 'Quiz ID required' }, { status: 400 })
         }
 
-        const { data: existingSession, error: selectError } = await supabase
+        const { data: existingSession } = await supabase
             .from('quiz_sessions')
             .select('completed, score')
             .eq('session_id', quizId)
             .single()
 
-        console.log('Existing session query result:', { existingSession, selectError })
-
-        if (selectError) {
-            console.error('Error selecting existing session:', selectError)
-            return NextResponse.json({ error: selectError.message }, { status: 500 })
-        }
-
         if (!existingSession) {
-            console.log('Session not found for quizId:', quizId)
             return new Response('Session not found', { status: 404 })
         }
 
@@ -99,19 +90,13 @@ export async function PUT(request: Request) {
         if (completed !== undefined) updateData.completed = completed
         if (answerHistory !== undefined) updateData.answer_history = answerHistory
 
-        console.log('Update data:', updateData)
-
-        const { data: updatedData, error: updateError } = await supabase
+        const { error } = await supabase
             .from('quiz_sessions')
             .update(updateData)
             .eq('session_id', quizId)
-            .select()
 
-        console.log('Update result:', { updatedData, updateError })
-
-        if (updateError) {
-            console.error('Error updating session:', updateError)
-            return NextResponse.json({ error: updateError.message }, { status: 500 })
+        if (error) {
+            return NextResponse.json({ error: error.message }, { status: 500 })
         }
 
         if (completed && !existingSession.completed) {
@@ -120,7 +105,7 @@ export async function PUT(request: Request) {
         }
 
         console.log('Quiz update successful')
-        return NextResponse.json({ success: true, updated: updatedData })
+        return NextResponse.json({ success: true })
     } catch (error) {
         console.error('Quiz PUT API error:', error)
         return NextResponse.json({
