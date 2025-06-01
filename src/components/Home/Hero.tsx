@@ -15,15 +15,15 @@ const Hero = () => {
     return (
         <>
             <div className='relative flex w-screen flex-col items-center justify-center overflow-x-hidden text-white'>
-                <div className='mt-40 overflow-hidden'>
+                <div className='flex h-[80vh] flex-col items-center justify-center overflow-hidden'>
                     <h1
-                        className={`${bebas_neue.className} text-center text-[5rem] leading-none md:text-[14rem]`}
+                        className={`${bebas_neue.className} text-center text-[5rem] leading-none md:text-[24rem]`}
                     >
                         DIVE INTO IVE
                     </h1>
                     <div className='flex flex-col items-center'>
                         <h1
-                            className={`${poppins.className} text-center text-sm md:text-lg`}
+                            className={`${poppins.className} text-center text-sm tracking-[10px] md:text-[24px]`}
                         >
                             4TH GENERATION K-POP SENSATION
                         </h1>

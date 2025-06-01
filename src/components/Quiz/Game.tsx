@@ -260,45 +260,64 @@ export default function Game({
 
     return isCompleted ? (
         <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 p-6'>
-            <div className='w-full max-w-md rounded-3xl border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
-                <h2 className='mb-6 text-center text-2xl font-bold text-pink-700'>
-                    Quiz Completed
+            <div className='w-full max-w-2xl rounded-md border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
+                <h2 className='mb-6 text-center text-4xl font-bold text-pink-700'>
+                    Quiz complete!
                 </h2>
-                <p className='mb-6 text-center text-xl'>
-                    Your Score:{' '}
-                    <span className='font-bold text-pink-600'>
+                <Image
+                    src='/gifs/quiz-complete.gif'
+                    alt='Quiz complete'
+                    width={0}
+                    height={0}
+                    className='h-auto w-full'
+                    loading='lazy'
+                />
+                <p className='my-6 text-center text-xl'>
+                    Your score:{' '}
+                    <span className='font-bold text-pink-700'>
                         {score}/{quizQuestions.length}
                     </span>
                 </p>
                 <div className='flex flex-col items-center gap-4'>
-                    <div className='flex gap-4'>
+                    <div className='flex flex-col gap-4 md:flex-row'>
                         <Button
                             onClick={handleRestart}
-                            className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                            className='w-64 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg md:w-36'
                         >
                             Play Again
                         </Button>
                         <Button
                             asChild
-                            className='rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                            className='w-64 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg md:w-36'
                         >
                             <Link href={`/quiz`}>New Quiz</Link>
                         </Button>
                     </div>
-                    <div className='flex flex-col items-center gap-4'>
+                    <div className='flex flex-col gap-4 md:flex-row'>
                         {user ? (
-                            <Button
-                                asChild
-                                variant='outline'
-                                className='border-pink-300 text-pink-600'
-                            >
-                                <Link href='/dashboard'>Back to Dashboard</Link>
-                            </Button>
+                            <>
+                                <Button
+                                    asChild
+                                    variant='outline'
+                                    className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
+                                >
+                                    <Link href='/leaderboard'>Leaderboard</Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    variant='outline'
+                                    className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
+                                >
+                                    <Link href='/dashboard'>
+                                        Back to Dashboard
+                                    </Link>
+                                </Button>
+                            </>
                         ) : (
                             <Button
                                 asChild
                                 variant='outline'
-                                className='border-pink-300 text-pink-600'
+                                className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
                             >
                                 <Link href='/'>Back to Home</Link>
                             </Button>

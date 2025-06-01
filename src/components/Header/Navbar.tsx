@@ -42,11 +42,11 @@ export function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className='hidden flex-1 md:block'>
-                        <div className='flex items-center justify-center space-x-8 uppercase'>
+                        <div className='flex items-center justify-center space-x-10'>
                             <Link
                                 href='/'
                                 className={cn(
-                                    'rounded-md py-2 text-3xl font-bold transition-colors hover:text-pink-600'
+                                    'rounded-md py-2 text-2xl font-bold transition-colors hover:text-pink-600'
                                 )}
                             >
                                 Home
@@ -55,7 +55,7 @@ export function Navbar() {
                             <Link
                                 href='/quiz'
                                 className={cn(
-                                    'rounded-md px-3 py-2 text-3xl font-bold transition-colors hover:text-pink-600'
+                                    'rounded-md py-2 text-2xl font-bold transition-colors hover:text-pink-600'
                                 )}
                             >
                                 Quiz
