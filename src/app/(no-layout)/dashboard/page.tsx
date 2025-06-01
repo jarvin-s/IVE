@@ -94,16 +94,16 @@ export default function Dashboard() {
                                         <table className='min-w-full'>
                                             <thead className='bg-pink-50'>
                                                 <tr>
-                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-sm text-left font-medium text-pink-800'>
                                                         Date
                                                     </th>
-                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-sm text-left font-medium text-pink-800'>
                                                         Score
                                                     </th>
-                                                    <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-sm text-center font-medium text-pink-800'>
                                                         Actions
                                                     </th>
-                                                    <th className='px-4 py-3 text-right text-sm font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-sm font-medium text-pink-800'>
                                                         Completed
                                                     </th>
                                                 </tr>
@@ -127,14 +127,14 @@ export default function Dashboard() {
                                                                 10
                                                             </td>
                                                             {!quiz.completed ? (
-                                                                <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
+                                                                <td className='px-4 py-3 flex justify-center text-right text-sm whitespace-nowrap'>
                                                                     <Link
                                                                         href={`/quiz/${quiz.session_id}`}
                                                                     >
                                                                         <Button
                                                                             variant='outline'
                                                                             size='sm'
-                                                                            className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                                            className='rounded-md border-pink-200 text-pink-800 hover:bg-pink-100'
                                                                         >
                                                                             Continue
                                                                         </Button>
@@ -148,7 +148,7 @@ export default function Dashboard() {
                                                                         <Button
                                                                             variant='outline'
                                                                             size='sm'
-                                                                            className='rounded-md border-pink-200 text-pink-600 hover:bg-pink-100'
+                                                                            className='rounded-md border-pink-200 text-pink-800 hover:bg-pink-100'
                                                                         >
                                                                             Details
                                                                         </Button>
@@ -156,12 +156,12 @@ export default function Dashboard() {
                                                                 </td>
                                                             )}
                                                             {quiz.completed ? (
-                                                                <td className='flex justify-center px-4 py-3 text-sm'>
-                                                                    <CheckCircle2 className='h-5 w-5 text-green-600' />
+                                                                <td className='px-4 py-3 text-center text-sm'>
+                                                                    <CheckCircle2 className='mx-auto h-5 w-5 text-green-600' />
                                                                 </td>
                                                             ) : (
-                                                                <td className='flex justify-center px-4 py-3 text-sm'>
-                                                                    <XCircle className='h-5 w-5 text-red-600' />
+                                                                <td className='px-4 py-3 text-center text-sm'>
+                                                                    <XCircle className='mx-auto h-5 w-5 text-red-600' />
                                                                 </td>
                                                             )}
                                                         </tr>

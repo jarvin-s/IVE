@@ -78,3 +78,18 @@ body {
         max-width: 100%;
     }
 }
+
+.quiz-game {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-i-am.jpg');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.dotted {
+    background-image: radial-gradient(#ffffff25 2px, transparent 2px);
+    background-size: 15px 15px;
+    background-color: rgba(255, 255, 255, 0);
+}
