@@ -50,94 +50,56 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-    console.log('Quiz PUT API called')
-    
-    try {
-        const supabase = await createClient()
-        console.log('Supabase client created')
-        
-        const { userId } = await auth()
-        console.log('Auth result:', { userId })
+    const supabase = await createClient()
+    const { userId } = await auth()
 
-        if (!userId) {
-            console.log('No userId found, returning 401')
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
-
-        const body = await request.json()
-        console.log('Request body:', body)
-        
-        const { quizId, currentQuestion, score, completed, answerHistory } = body
-
-        if (!quizId) {
-            console.log('No quizId provided')
-            return NextResponse.json({ error: 'Quiz ID required' }, { status: 400 })
-        }
-
-        const { data: existingSession, error: selectError } = await supabase
-            .from('quiz_sessions')
-            .select('completed, score')
-            .eq('session_id', quizId)
-            .single()
-
-        console.log('Existing session query result:', { existingSession, selectError })
-
-        if (selectError) {
-            console.error('Error selecting existing session:', selectError)
-            return NextResponse.json({ error: selectError.message }, { status: 500 })
-        }
-
-        if (!existingSession) {
-            console.log('Session not found for quizId:', quizId)
-            return new Response('Session not found', { status: 404 })
-        }
-
-        const updateData: {
-            current_question?: number
-            score?: number
-            completed?: boolean
-            answer_history?: Array<{
-                quizId: string
-                userAnswer: string
-                correctAnswer: string
-                correct: boolean
-            }>
-        } = {}
-        
-        if (currentQuestion !== undefined) updateData.current_question = currentQuestion
-        if (score !== undefined) updateData.score = score
-        if (completed !== undefined) updateData.completed = completed
-        if (answerHistory !== undefined) updateData.answer_history = answerHistory
-
-        console.log('Update data:', updateData)
-
-        const { data: updatedData, error: updateError } = await supabase
-            .from('quiz_sessions')
-            .update(updateData)
-            .eq('session_id', quizId)
-            .select()
-
-        console.log('Update result:', { updatedData, updateError })
-
-        if (updateError) {
-            console.error('Error updating session:', updateError)
-            return NextResponse.json({ error: updateError.message }, { status: 500 })
-        }
-
-        if (completed && !existingSession.completed) {
-            console.log('Quiz completed, updating leaderboard')
-            updateLeaderboardAsync(userId, score)
-        }
-
-        console.log('Quiz update successful')
-        return NextResponse.json({ success: true, updated: updatedData })
-    } catch (error) {
-        console.error('Quiz PUT API error:', error)
-        return NextResponse.json({ 
-            error: 'Internal server error',
-            details: error instanceof Error ? error.message : 'Unknown error'
-        }, { status: 500 })
+    if (!userId) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const { quizId, currentQuestion, score, completed, answerHistory } =
+        await request.json()
+
+    const { data: existingSession } = await supabase
+        .from('quiz_sessions')
+        .select('completed, score')
+        .eq('session_id', quizId)
+        .single()
+
+    if (!existingSession) {
+        return new Response('Session not found', { status: 404 })
+    }
+
+    const updateData: {
+        current_question?: number
+        score?: number
+        completed?: boolean
+        answer_history?: Array<{
+            quizId: string
+            userAnswer: string
+            correctAnswer: string
+            correct: boolean
+        }>
+    } = {}
+    if (currentQuestion !== undefined) updateData.current_question = currentQuestion
+    if (score !== undefined) updateData.score = score
+    if (completed !== undefined) updateData.completed = completed
+    if (answerHistory !== undefined) updateData.answer_history = answerHistory
+
+    const { error } = await supabase
+        .from('quiz_sessions')
+        .update(updateData)
+        .eq('session_id', quizId)
+
+    if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    if (completed && !existingSession.completed) {
+        updateLeaderboardAsync(userId, score)
+    }
+
+    return NextResponse.json({ success: true })
 }
 
 async function updateLeaderboardAsync(userId: string, score: number) {
