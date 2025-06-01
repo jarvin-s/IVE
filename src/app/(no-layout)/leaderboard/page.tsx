@@ -208,7 +208,7 @@ export default function LeaderboardPage() {
                                             </td>
                                             <td className='px-6 py-4 whitespace-nowrap'>
                                                 <div className='flex items-center'>
-                                                    {entry.username}
+                                                    {entry.username.toLowerCase()}
                                                     {isCurrentUser && (
                                                         <span className='ml-2 rounded-full bg-pink-700 px-2 py-1 text-xs text-white'>
                                                             You

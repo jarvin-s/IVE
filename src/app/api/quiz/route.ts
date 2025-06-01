@@ -2,31 +2,21 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { auth, clerkClient } from '@clerk/nextjs/server'
 
-async function updateLeaderboard(userId: string, username: string, score: number) {
+async function updateLeaderboard(userId: string, username: string) {
     const supabase = await createClient()
 
     const { data: existingEntry } = await supabase
         .from('quiz_leaderboard')
-        .select('total_score')
+        .select('*')
         .eq('user_id', userId)
         .single()
 
-    if (existingEntry) {
-        await supabase
-            .from('quiz_leaderboard')
-            .update({
-                total_score: existingEntry.total_score + score,
-                calculated_at: new Date().toISOString()
-            })
-            .eq('user_id', userId)
-    } else {
+    if (!existingEntry) {
         await supabase
             .from('quiz_leaderboard')
             .insert({
                 user_id: userId,
                 username: username,
-                total_score: score,
-                calculated_at: new Date().toISOString()
             })
     }
 }
@@ -51,11 +41,11 @@ export async function GET() {
 
 export async function PUT(request: Request) {
     console.log('Quiz PUT API called')
-    
+
     try {
         const supabase = await createClient()
         console.log('Supabase client created')
-        
+
         const { userId } = await auth()
         console.log('Auth result:', { userId })
 
@@ -66,7 +56,7 @@ export async function PUT(request: Request) {
 
         const body = await request.json()
         console.log('Request body:', body)
-        
+
         const { quizId, currentQuestion, score, completed, answerHistory } = body
 
         if (!quizId) {
@@ -103,7 +93,7 @@ export async function PUT(request: Request) {
                 correct: boolean
             }>
         } = {}
-        
+
         if (currentQuestion !== undefined) updateData.current_question = currentQuestion
         if (score !== undefined) updateData.score = score
         if (completed !== undefined) updateData.completed = completed
@@ -126,26 +116,26 @@ export async function PUT(request: Request) {
 
         if (completed && !existingSession.completed) {
             console.log('Quiz completed, updating leaderboard')
-            updateLeaderboardAsync(userId, score)
+            updateLeaderboardAsync(userId)
         }
 
         console.log('Quiz update successful')
         return NextResponse.json({ success: true, updated: updatedData })
     } catch (error) {
         console.error('Quiz PUT API error:', error)
-        return NextResponse.json({ 
+        return NextResponse.json({
             error: 'Internal server error',
             details: error instanceof Error ? error.message : 'Unknown error'
         }, { status: 500 })
     }
 }
 
-async function updateLeaderboardAsync(userId: string, score: number) {
+async function updateLeaderboardAsync(userId: string) {
     try {
         const clerk = await clerkClient()
         const user = await clerk.users.getUser(userId)
         const username = user.username || user.emailAddresses[0]?.emailAddress || 'Anonymous'
-        await updateLeaderboard(userId, username, score)
+        await updateLeaderboard(userId, username)
     } catch (error) {
         console.error('Error updating leaderboard:', error)
     }
