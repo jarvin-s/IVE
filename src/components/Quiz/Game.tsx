@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { Bebas_Neue } from 'next/font/google'
 import { useUser } from '@clerk/nextjs'
 import Image from 'next/image'
@@ -12,27 +11,6 @@ const bebasNeue = Bebas_Neue({
     weight: '400',
     subsets: ['latin'],
 })
-
-const Progress = ({
-    value,
-    className,
-    indicatorClassName,
-}: {
-    value: number
-    className?: string
-    indicatorClassName?: string
-}) => {
-    return (
-        <div
-            className={`relative w-full overflow-hidden rounded-full ${className || ''}`}
-        >
-            <div
-                className={`h-full ${indicatorClassName || ''}`}
-                style={{ width: `${value}%` }}
-            />
-        </div>
-    )
-}
 
 interface QuizProps {
     questions: {
@@ -133,21 +111,24 @@ export default function Game({
             })
 
             console.log('Quiz API response status:', response.status)
-            
+
             if (!response.ok) {
                 const errorData = await response.text()
                 console.error('Quiz API error response:', errorData)
-                throw new Error(`API call failed: ${response.status} - ${errorData}`)
+                throw new Error(
+                    `API call failed: ${response.status} - ${errorData}`
+                )
             }
 
             const responseData = await response.json()
             console.log('Quiz API success response:', responseData)
         } catch (error) {
             console.error('Error saving quiz progress:', error)
-            
-            // Show user-friendly error message
-            alert(`Failed to save quiz progress: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your internet connection and try again.`)
-            
+
+            alert(
+                `Failed to save quiz progress: ${error instanceof Error ? error.message : 'Unknown error'}. Please check your internet connection and try again.`
+            )
+
             setScore(score)
             setAnswerHistory(answerHistory)
             setCurrentQuestion(currentQuestion)
@@ -258,6 +239,27 @@ export default function Game({
         highlightedOption,
     ])
 
+    const Progress = ({
+        value,
+        className,
+        indicatorClassName,
+    }: {
+        value: number
+        className?: string
+        indicatorClassName?: string
+    }) => {
+        return (
+            <div
+                className={`relative w-full overflow-hidden ${className || ''}`}
+            >
+                <div
+                    className={`h-full ${indicatorClassName || ''}`}
+                    style={{ width: `${value}%` }}
+                />
+            </div>
+        )
+    }
+
     return isCompleted ? (
         <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 p-6'>
             <div className='w-full max-w-2xl rounded-md border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
@@ -327,159 +329,148 @@ export default function Game({
             </div>
         </div>
     ) : (
-        <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
-            <header className='relative flex w-full justify-center px-6 py-4'>
-                <div className='absolute top-4 left-4 md:top-6 md:left-8'>
-                    <Link href={user ? '/dashboard' : '/quiz'}>
-                        <Button
-                            variant='ghost'
-                            size='icon'
-                            className='rounded-full'
-                        >
-                            <ArrowLeft className='h-5 w-5 text-pink-600' />
-                        </Button>
-                    </Link>
-                </div>
-                <h1
-                    className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
+        <div className='quiz-game min-h-screen text-white'>
+            <div className='dotted pointer-events-none absolute top-0 left-0 h-[100%] w-[100%] opacity-40' />
+            {/* Quiz Header */}
+            <div className='mx-auto px-4 py-6'>
+                <div
+                    className={`${bebasNeue.className} flex items-center justify-between px-8`}
                 >
-                    IVE QUIZ
-                </h1>
-            </header>
-
-            <main className='flex flex-1 flex-col items-center justify-center p-6'>
-                <div className='w-full max-w-md'>
-                    <div className='mb-6 flex items-center justify-between'>
-                        <span className='text-xl font-bold text-pink-700'>
-                            Question:{' '}
-                            <span className='font-medium'>
-                                {currentQuestion + 1}/{quizQuestions.length}
-                            </span>
-                        </span>
-                        <span className='text-xl font-bold text-pink-700'>
-                            Score: <span className='font-medium'>{score}</span>
+                    <div className='w-1/3 text-center text-lg md:text-right md:text-5xl'>
+                        QUESTION {currentQuestion + 1} / {quizQuestions.length}
+                    </div>
+                    <div className='flex w-1/3 items-center justify-center gap-2'>
+                        <Image
+                            src='/images/logo.png'
+                            alt='IVE Logo'
+                            width={60}
+                            height={60}
+                        />
+                        <span
+                            className={`${bebasNeue.className} text-lg md:text-5xl`}
+                        >
+                            QUIZ
                         </span>
                     </div>
+                    <div className='w-1/3 text-center text-lg md:text-left md:text-5xl'>
+                        SCORE {score}
+                    </div>
+                </div>
+            </div>
 
-                    <Progress
-                        value={(currentQuestion / quizQuestions.length) * 100}
-                        className='h-2 bg-pink-200'
-                        indicatorClassName='bg-gradient-to-r from-pink-500 to-pink-600'
-                    />
+            {/* Progress bar */}
+            <div className='fixed right-0 bottom-0 left-0'>
+                <Progress
+                    value={(currentQuestion / quizQuestions.length) * 100}
+                    className='h-4 bg-pink-200'
+                    indicatorClassName='bg-pink-700'
+                />
+            </div>
 
-                    <div className='relative mt-8'>
-                        <div className='relative overflow-hidden rounded-lg border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
-                            {quizQuestions[currentQuestion].image && (
-                                <div className='flex justify-center'>
-                                    <Image
-                                        src={
+            {/* Quiz Content */}
+            <div className='flex h-[80vh] items-center justify-center px-4 py-12'>
+                <div className='relative mx-auto max-w-3xl'>
+                    {/* Question */}
+                    <h2
+                        className={`${bebasNeue.className} text-center text-4xl font-bold md:text-7xl`}
+                    >
+                        {quizQuestions[currentQuestion].question}
+                    </h2>
+
+                    <div className='relative overflow-hidden py-4 md:p-8'>
+                        {quizQuestions[currentQuestion].image && (
+                            <div className='flex justify-center'>
+                                <Image
+                                    src={
+                                        quizQuestions[currentQuestion].image ||
+                                        '/default-image.png'
+                                    }
+                                    alt='Question Image'
+                                    width={600}
+                                    height={200}
+                                    className='mb-4 rounded-md'
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Options Grid */}
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                        {quizQuestions[currentQuestion].options.map(
+                            (option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleAnswerSelect(option)}
+                                    disabled={answered}
+                                    className={`group relative cursor-pointer overflow-hidden rounded-md border-2 p-4 text-left transition-all ${
+                                        answered &&
+                                        option ===
                                             quizQuestions[currentQuestion]
-                                                .image || '/default-image.png'
-                                        }
-                                        alt='Question Image'
-                                        width={400}
-                                        height={200}
-                                        className='mb-4 rounded-lg'
-                                    />
-                                </div>
-                            )}
-                            <h2 className='mb-6 text-center text-xl font-bold text-pink-700 md:text-2xl'>
-                                {quizQuestions[currentQuestion].question}
-                            </h2>
-
-                            <div className='space-y-3'>
-                                {quizQuestions[currentQuestion].options.map(
-                                    (option, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() =>
-                                                handleAnswerSelect(option)
-                                            }
-                                            className={`w-full cursor-pointer rounded-xl p-4 text-left transition-all ${
+                                                .correct_answer
+                                            ? 'border-green-700 bg-green-700/20'
+                                            : answered &&
+                                                option === selectedAnswer
+                                              ? 'border-red-700 bg-red-700/20'
+                                              : option === highlightedOption
+                                                ? 'border-pink-700 bg-zinc-950/80'
+                                                : 'border-[#6d6d6d2a] bg-zinc-950'
+                                    }`}
+                                >
+                                    <div className='flex items-center gap-3'>
+                                        <div
+                                            className={`flex h-8 w-8 items-center justify-center rounded-full ${
                                                 answered &&
                                                 option ===
                                                     quizQuestions[
                                                         currentQuestion
                                                     ].correct_answer
-                                                    ? 'border-2 border-green-600 bg-green-100 text-green-800'
-                                                    : selectedAnswer === option
-                                                      ? option ===
-                                                        quizQuestions[
-                                                            currentQuestion
-                                                        ].correct_answer
-                                                          ? 'border-2 border-green-600 bg-green-100 text-green-800'
-                                                          : 'border-2 border-red-400 bg-red-100 text-red-800'
+                                                    ? 'bg-green-700'
+                                                    : answered &&
+                                                        option ===
+                                                            selectedAnswer
+                                                      ? 'bg-red-700'
                                                       : option ===
                                                           highlightedOption
-                                                        ? 'border-2 border-pink-500 bg-pink-50 text-black'
-                                                        : 'border-2 border-pink-100 bg-white/70 text-black hover:border-pink-500'
+                                                        ? 'bg-pink-700'
+                                                        : 'bg-pink-700'
                                             }`}
-                                            disabled={answered}
                                         >
-                                            <div className='flex items-center'>
-                                                <div
-                                                    className={`mr-3 flex h-6 w-6 items-center justify-center rounded-full ${
-                                                        answered &&
-                                                        option ===
-                                                            quizQuestions[
-                                                                currentQuestion
-                                                            ].correct_answer
-                                                            ? 'bg-green-600 text-white'
-                                                            : selectedAnswer ===
-                                                                option
-                                                              ? option ===
-                                                                quizQuestions[
-                                                                    currentQuestion
-                                                                ].correct_answer
-                                                                  ? 'border-2 border-green-600 bg-green-100 text-green-800'
-                                                                  : 'bg-red-500 text-white'
-                                                              : option ===
-                                                                  highlightedOption
-                                                                ? 'bg-pink-300 text-pink-700'
-                                                                : 'bg-pink-100 text-pink-500'
-                                                    }`}
-                                                >
-                                                    {String.fromCharCode(
-                                                        65 + index
-                                                    )}
-                                                </div>
-                                                {option}
-                                            </div>
-                                        </button>
-                                    )
-                                )}
-                            </div>
+                                            {String.fromCharCode(65 + index)}
+                                        </div>
+                                        <span className='text-lg'>
+                                            {option}
+                                        </span>
+                                    </div>
+                                </button>
+                            )
+                        )}
+                    </div>
 
-                            {!answered && (
-                                <div className='mt-6 flex justify-end'>
-                                    <Button
-                                        onClick={handleSubmitAnswer}
-                                        disabled={!highlightedOption}
-                                        className='rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
-                                    >
-                                        Submit Answer
-                                    </Button>
-                                </div>
-                            )}
-
-                            {answered && (
-                                <div className='mt-6 flex justify-end'>
-                                    <Button
-                                        onClick={handleNextQuestion}
-                                        className='flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
-                                    >
-                                        {currentQuestion <
-                                        quizQuestions.length - 1
-                                            ? 'Next Question'
-                                            : 'See Results'}
-                                        <ArrowRight className='h-4 w-4' />
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
+                    {/* Action Buttons */}
+                    <div
+                        className={`${bebasNeue.className} mt-8 flex justify-center`}
+                    >
+                        {!answered ? (
+                            <Button
+                                onClick={handleSubmitAnswer}
+                                disabled={!highlightedOption}
+                                className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800 disabled:opacity-50'
+                            >
+                                SUBMIT ANSWER
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={handleNextQuestion}
+                                className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800'
+                            >
+                                {currentQuestion < quizQuestions.length - 1
+                                    ? 'NEXT QUESTION'
+                                    : 'SEE RESULTS'}
+                            </Button>
+                        )}
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     )
 }
