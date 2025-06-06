@@ -318,7 +318,7 @@ export default function Game({
             </div>
 
             {/* Quiz Content */}
-            <div className='flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12'>
+            <div className='flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-2 md:py-12'>
                 <motion.div
                     className='relative mx-auto max-w-3xl'
                     initial={{ y: 20, opacity: 0 }}

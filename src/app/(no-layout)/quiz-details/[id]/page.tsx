@@ -2,10 +2,16 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, XCircle, Trash2 } from 'lucide-react'
+import { CheckCircle2, XCircle, Trash2 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { use, useEffect, useState } from 'react'
+import { Bebas_Neue } from 'next/font/google'
+
+const bebasNeue = Bebas_Neue({
+    subsets: ['latin'],
+    weight: ['400'],
+})
 
 interface Question {
     id: number
@@ -102,21 +108,17 @@ export default function QuizDetails({
     }
 
     return (
-        <div className='flex min-h-screen flex-col bg-gradient-to-b from-pink-100 to-pink-200'>
-            <header className='relative flex w-full justify-center px-6 py-4'>
-                <div className='absolute top-4 left-4 md:top-6 md:left-8'>
+        <div className='quiz-creation flex min-h-screen flex-col'>
+            <header className='relative flex w-full justify-center px-6 py-4 text-white'>
+                <div className='absolute top-10 left-4 md:top-14 md:left-8'>
                     <Link href='/dashboard'>
-                        <Button
-                            variant='ghost'
-                            size='icon'
-                            className='rounded-full'
-                        >
-                            <ArrowLeft className='text-pink-600' size={24} />
-                        </Button>
+                        <ArrowLeft />
                     </Link>
                 </div>
-                <h1 className='text-3xl font-bold text-pink-600 md:text-5xl'>
-                    Quiz Details
+                <h1
+                    className={`${bebasNeue.className} text-7xl font-bold md:text-9xl`}
+                >
+                    Quiz details
                 </h1>
             </header>
 
@@ -128,14 +130,14 @@ export default function QuizDetails({
                         </div>
                     ) : quizDetails ? (
                         <div className='space-y-6'>
-                            <div className='rounded-md bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
+                            <div className='rounded-md bg-white p-6'>
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
                                     Summary
                                 </h2>
                                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                                     <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
-                                            Date Taken
+                                            Date taken
                                         </p>
                                         <p className='font-medium text-gray-800'>
                                             {formatDate(quizDetails.created_at)}
@@ -143,7 +145,7 @@ export default function QuizDetails({
                                     </div>
                                     <div className='rounded-md bg-pink-50 p-4'>
                                         <p className='text-sm text-pink-700'>
-                                            Final Score
+                                            Final score
                                         </p>
                                         <p className='font-medium text-gray-800'>
                                             {quizDetails.score} /{' '}
@@ -189,9 +191,9 @@ export default function QuizDetails({
                                 </div>
                             </div>
 
-                            <div className='rounded-md bg-white/90 p-6 shadow-lg backdrop-blur-sm'>
+                            <div className='rounded-md bg-white p-6'>
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
-                                    Question Review
+                                    Question review
                                 </h2>
 
                                 {quizDetails.answer_history.length > 0 ? (
@@ -287,7 +289,7 @@ export default function QuizDetails({
                                 <Link className='w-full md:w-auto' href='/quiz'>
                                     <Button
                                         variant='outline'
-                                        className='w-full border-pink-300 text-pink-700 hover:bg-pink-50 md:w-auto'
+                                        className='w-full border-pink-300 text-white hover:bg-pink-50 hover:text-pink-700 md:w-auto'
                                     >
                                         Take another quiz
                                     </Button>
@@ -295,7 +297,7 @@ export default function QuizDetails({
                             </div>
                         </div>
                     ) : (
-                        <div className='rounded-xl bg-pink-50 p-6 text-center shadow'>
+                        <div className='rounded-md bg-pink-50 p-6 text-center'>
                             <p className='text-gray-600'>
                                 Quiz not found or you don&apos;t have permission
                                 to view it.
@@ -303,7 +305,7 @@ export default function QuizDetails({
                             <div className='mt-4'>
                                 <Link href='/dashboard'>
                                     <Button className='bg-pink-500 text-white hover:bg-pink-600'>
-                                        Back to Dashboard
+                                        Back to dashboard
                                     </Button>
                                 </Link>
                             </div>
@@ -342,5 +344,25 @@ export default function QuizDetails({
                 </div>
             )}
         </div>
+    )
+}
+
+const ArrowLeft = () => {
+    return (
+        <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+        >
+            <path
+                fill='none'
+                stroke='currentColor'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='m12 19l-7-7l7-7m7 7H5'
+            />
+        </svg>
     )
 }
