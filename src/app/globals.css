@@ -80,12 +80,75 @@ body {
 }
 
 .quiz-game {
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url('/images/quiz/background/ive-i-am.jpg');
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
+}
+
+.quiz-creation {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-1.jpg');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.quiz-complete {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/gifs/quiz-complete.gif');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+
+.quiz-bg-1 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-1.jpg');
+}
+
+.quiz-bg-2 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-2.jpg');
+}
+
+.quiz-bg-3 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-3.jpg');
+}
+
+.quiz-bg-4 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-4.jpg');
+}
+
+.quiz-bg-5 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-5.jpg');
+}
+
+.quiz-bg-6 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-6.jpg');
+}
+
+.quiz-bg-7 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-7.jpg');
+}
+
+.quiz-bg-8 {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/images/quiz/background/ive-bg-8.jpg');
 }
 
 .dotted {
