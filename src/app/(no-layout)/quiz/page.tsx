@@ -5,83 +5,100 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
 import { useUser } from '@clerk/nextjs'
-import { Bebas_Neue } from 'next/font/google'
+import { motion } from 'motion/react'
+import { useState } from 'react'
 
-const bebasNeue = Bebas_Neue({
-    weight: '400',
-    subsets: ['latin'],
-})
-
-export default function Home() {
+export default function QuizCreation() {
     const { user, isLoaded } = useUser()
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
     const handleStartQuiz = () => {
+        setIsLoading(true)
         const quizId = uuidv4()
         router.push(`/quiz/${quizId}`)
     }
 
     return (
-        <div className='flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-b from-pink-100 to-pink-200'>
-            <header className='relative flex w-full justify-center px-6 py-4'>
-                <h1
-                    className={`${bebasNeue.className} text-3xl font-bold text-pink-600 md:text-9xl`}
-                >
-                    IVE QUIZ
-                </h1>
-            </header>
-
-            <main className='flex flex-1 flex-col items-center justify-center p-6 text-center'>
-                <div className='mx-auto w-full max-w-md'>
+        <div className='quiz-creation flex min-h-screen flex-col overflow-x-hidden text-white'>
+            <main className='flex h-[80vh] flex-col items-center justify-center p-6 text-center'>
+                <div className='mx-auto w-full max-w-[904px]'>
                     <div className='relative mb-8'>
-                        <div className='absolute -top-12 -left-8 h-24 w-24 rounded-full bg-pink-300 opacity-50 blur-xl'></div>
-                        <div className='absolute -right-8 -bottom-16 h-32 w-32 rounded-full bg-purple-300 opacity-40 blur-xl'></div>
-                        <div className='relative overflow-hidden rounded-md border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
-                            <div className='absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-gradient-to-br from-pink-400 to-purple-400 opacity-20'></div>
-                            <h2 className='mb-4 text-2xl font-bold text-pink-700 md:text-3xl'>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.75, delay: 0.5 }}
+                            className='relative overflow-hidden rounded-md p-8'
+                        >
+                            <motion.h2
+                                initial={{ y: -50, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{
+                                    duration: 0.8,
+                                    delay: 0.7,
+                                    ease: 'easeInOut',
+                                }}
+                                className='mb-4 text-4xl font-bold md:text-6xl'
+                            >
                                 How well do you know IVE?
-                            </h2>
-                            <p className='mb-6 text-gray-700'>
+                            </motion.h2>
+                            <motion.p
+                                initial={{ x: -50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.8, delay: 0.9 }}
+                                className='mb-6 text-xl text-gray-300 italic'
+                            >
                                 Test your knowledge about one of K-pop&apos;s
                                 most popular girl groups!
-                            </p>
-                            <div className='space-y-4'>
+                            </motion.p>
+                            <motion.div
+                                initial={{ y: 50, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.8, delay: 1.1 }}
+                                className='mx-auto space-y-4 md:w-1/2'
+                            >
                                 <Button
                                     onClick={handleStartQuiz}
-                                    className='w-full rounded-md bg-gradient-to-r from-pink-500 to-pink-600 py-6 text-lg text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg'
+                                    disabled={isLoading}
+                                    className='w-full rounded-md bg-pink-700 py-6 text-lg text-white hover:bg-pink-800'
                                 >
-                                    Start Quiz
+                                    {isLoading ? (
+                                        <div className='flex items-center justify-center gap-2'>
+                                            <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+                                            <span>Loading</span>
+                                        </div>
+                                    ) : (
+                                        <span>Start quiz</span>
+                                    )}
                                 </Button>
-                                {isLoaded && user && (
-                                    <Link
-                                        href='/dashboard'
-                                        className='block w-full'
-                                    >
+                                <div className='flex gap-4'>
+                                    {isLoaded && user && (
+                                        <Link
+                                            href='/dashboard'
+                                            className='w-full'
+                                        >
+                                            <Button
+                                                variant='outline'
+                                                className='w-full rounded-md border-2 border-pink-700 py-6 text-lg text-white hover:bg-pink-700'
+                                            >
+                                                Dashboard
+                                            </Button>
+                                        </Link>
+                                    )}
+                                    <Link href='/' className='w-full'>
                                         <Button
                                             variant='outline'
-                                            className='w-full rounded-md border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
+                                            className='w-full rounded-md border-2 border-pink-700 py-6 text-lg text-white hover:bg-pink-700'
                                         >
-                                            Dashboard
+                                            Home
                                         </Button>
                                     </Link>
-                                )}
-                                <Link href='/' className='block w-full'>
-                                    <Button
-                                        variant='outline'
-                                        className='w-full rounded-md border-pink-300 py-6 text-lg text-pink-700 hover:bg-pink-50'
-                                    >
-                                        Home
-                                    </Button>
-                                </Link>
-                            </div>
-                        </div>
+                                </div>
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </div>
             </main>
-
-            <footer className='py-4 text-center text-sm text-pink-700'>
-                <p>Made with 💖 for DIVE (IVE&apos;s fandom)</p>
-            </footer>
         </div>
     )
 }

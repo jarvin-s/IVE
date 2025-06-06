@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 import { Bebas_Neue } from 'next/font/google'
 import { useUser } from '@clerk/nextjs'
 import Image from 'next/image'
+import QuizComplete from './QuizComplete'
+import Link from 'next/link'
+import { AnimatePresence, motion } from 'motion/react'
 
 const bebasNeue = Bebas_Neue({
     weight: '400',
@@ -43,6 +45,7 @@ export default function Game({
     const [score, setScore] = useState(initialScore)
     const [selectedAnswer, setSelectedAnswer] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [backgroundClass, setBackgroundClass] = useState('quiz-bg-1')
     const [answered, setAnswered] = useState(false)
     const [answerHistory, setAnswerHistory] = useState<
         Array<{
@@ -57,6 +60,11 @@ export default function Game({
     )
     const nextQuestion = currentQuestion + 1
     const isCompleted = nextQuestion > quizQuestions.length
+
+    useEffect(() => {
+        const bgNumber = Math.floor(Math.random() * 8) + 1
+        setBackgroundClass(`quiz-bg-${bgNumber}`)
+    }, [])
 
     const handleAnswerSelect = useCallback(
         (answer: string) => {
@@ -146,28 +154,6 @@ export default function Game({
         isSubmitting,
     ])
 
-    const handleRestart = async () => {
-        setAnswerHistory([])
-
-        await fetch('/api/quiz', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                quizId,
-                currentQuestion: 0,
-                score: 0,
-                completed: false,
-                answerHistory: [],
-            }),
-        })
-        setCurrentQuestion(0)
-        setScore(0)
-        setAnswered(false)
-        setHighlightedOption(null)
-    }
-
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (isCompleted) return
@@ -236,158 +222,144 @@ export default function Game({
         highlightedOption,
     ])
 
-    const Progress = ({
-        value,
-        className,
-        indicatorClassName,
-    }: {
-        value: number
-        className?: string
-        indicatorClassName?: string
-    }) => {
-        return (
-            <div
-                className={`relative w-full overflow-hidden ${className || ''}`}
-            >
-                <div
-                    className={`h-full ${indicatorClassName || ''}`}
-                    style={{ width: `${value}%` }}
-                />
-            </div>
-        )
-    }
-
     return isCompleted ? (
-        <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 p-6'>
-            <div className='w-full max-w-2xl rounded-md border border-pink-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm'>
-                <h2 className='mb-6 text-center text-4xl font-bold text-pink-700'>
-                    Quiz complete!
-                </h2>
-                <Image
-                    src='/gifs/quiz-complete.gif'
-                    alt='Quiz complete'
-                    width={0}
-                    height={0}
-                    className='h-auto w-full'
-                    loading='lazy'
-                />
-                <p className='my-6 text-center text-xl'>
-                    Your score:{' '}
-                    <span className='font-bold text-pink-700'>
-                        {score}/{quizQuestions.length}
-                    </span>
-                </p>
-                <div className='flex flex-col items-center gap-4'>
-                    <div className='flex flex-col gap-4 md:flex-row'>
-                        <Button
-                            onClick={handleRestart}
-                            className='w-64 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg md:w-36'
-                        >
-                            Play Again
-                        </Button>
-                        <Button
-                            asChild
-                            className='w-64 rounded-md bg-gradient-to-r from-pink-500 to-pink-600 px-6 py-2 text-white shadow-md transition-all hover:from-pink-600 hover:to-pink-700 hover:shadow-lg md:w-36'
-                        >
-                            <Link href={`/quiz`}>New Quiz</Link>
-                        </Button>
-                    </div>
-                    <div className='flex flex-col gap-4 md:flex-row'>
-                        {user ? (
-                            <>
-                                <Button
-                                    asChild
-                                    variant='outline'
-                                    className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
-                                >
-                                    <Link href='/leaderboard'>Leaderboard</Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    variant='outline'
-                                    className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
-                                >
-                                    <Link href='/dashboard'>
-                                        Back to Dashboard
-                                    </Link>
-                                </Button>
-                            </>
-                        ) : (
-                            <Button
-                                asChild
-                                variant='outline'
-                                className='w-64 border-pink-300 text-pink-600 hover:bg-pink-200/50 md:w-36'
-                            >
-                                <Link href='/'>Back to Home</Link>
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <QuizComplete
+            score={score}
+            totalQuestions={quizQuestions.length}
+            isAuthenticated={!!user}
+        />
     ) : (
-        <div className='quiz-game min-h-screen text-white'>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className={`quiz-game ${backgroundClass} min-h-screen text-white`}
+        >
             <div className='dotted pointer-events-none absolute top-0 left-0 h-[100%] w-[100%] opacity-40' />
             {/* Quiz Header */}
             <div className='mx-auto px-4 py-6'>
                 <div
-                    className={`${bebasNeue.className} flex items-center justify-between px-8`}
+                    className={`${bebasNeue.className} flex items-center justify-between`}
                 >
-                    <div className='w-1/3 text-center text-lg md:text-right md:text-5xl'>
-                        QUESTION {currentQuestion + 1} / {quizQuestions.length}
-                    </div>
-                    <div className='flex w-1/3 items-center justify-center gap-2'>
+                    <Link href='/quiz' className='md:ml-4'>
+                        <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            <ArrowLeft />
+                        </motion.div>
+                    </Link>
+                    <motion.div
+                        className='w-1/3 text-center text-lg md:text-right md:text-5xl'
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        QUESTION
+                        <motion.span
+                            className='ml-2 text-pink-700'
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                        >
+                            {currentQuestion + 1}/{quizQuestions.length}
+                        </motion.span>
+                    </motion.div>
+                    <motion.div
+                        className='flex w-1/3 items-center justify-center gap-2'
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                    >
                         <Image
                             src='/images/logo.png'
                             alt='IVE Logo'
                             width={60}
                             height={60}
                         />
-                        <span
-                            className={`${bebasNeue.className} text-lg md:text-5xl`}
+                    </motion.div>
+                    <motion.div
+                        className='w-1/3 text-center text-lg md:text-left md:text-5xl'
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        SCORE{' '}
+                        <motion.span
+                            key={score}
+                            initial={{ scale: 1.5 }}
+                            animate={{ scale: 1 }}
+                            className='ml-2 text-pink-700'
                         >
-                            QUIZ
-                        </span>
-                    </div>
-                    <div className='w-1/3 text-center text-lg md:text-left md:text-5xl'>
-                        SCORE {score}
-                    </div>
+                            {score}
+                        </motion.span>
+                    </motion.div>
                 </div>
             </div>
 
             {/* Progress bar */}
-            <div className='fixed right-0 bottom-0 left-0'>
-                <Progress
-                    value={(currentQuestion / quizQuestions.length) * 100}
+            <div className='fixed right-0 bottom-0 left-0 z-1'>
+                <motion.div
                     className='h-4 bg-pink-200'
-                    indicatorClassName='bg-pink-700'
-                />
+                    style={{
+                        width: '100%',
+                    }}
+                >
+                    <motion.div
+                        className='h-full bg-pink-700'
+                        initial={{
+                            width: `${(currentQuestion / quizQuestions.length) * 100}%`,
+                        }}
+                        animate={{
+                            width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%`,
+                        }}
+                        transition={{ duration: 0.5 }}
+                    />
+                </motion.div>
             </div>
 
             {/* Quiz Content */}
-            <div className='flex h-[80vh] items-center justify-center px-4 py-12'>
-                <div className='relative mx-auto max-w-3xl'>
+            <div className='flex min-h-[calc(100vh-200px)] items-center justify-center px-4 py-12'>
+                <motion.div
+                    className='relative mx-auto max-w-3xl'
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                >
                     {/* Question */}
-                    <h2
-                        className={`${bebasNeue.className} text-center text-4xl font-bold md:text-7xl`}
-                    >
-                        {quizQuestions[currentQuestion].question}
-                    </h2>
+                    <AnimatePresence mode='wait'>
+                        <motion.h2
+                            key={currentQuestion}
+                            initial={{ x: 100, y: 100, opacity: 0 }}
+                            animate={{ x: 0, y: 0, opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                            exit={{ x: -100, y: -100, opacity: 0 }}
+                            className={`${bebasNeue.className} text-center text-4xl font-bold md:text-7xl`}
+                        >
+                            {quizQuestions[currentQuestion].question}
+                        </motion.h2>
+                    </AnimatePresence>
 
-                    <div className='relative overflow-hidden py-4 md:p-8'>
+                    <div className='relative overflow-hidden py-4'>
                         {quizQuestions[currentQuestion].image && (
-                            <div className='flex justify-center'>
+                            <motion.div
+                                className='flex justify-center'
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 1.5, duration: 0.5 }}
+                            >
                                 <Image
                                     src={
                                         quizQuestions[currentQuestion].image ||
                                         '/default-image.png'
                                     }
                                     alt='Question Image'
-                                    width={600}
-                                    height={200}
-                                    className='mb-4 rounded-md'
+                                    width={1000}
+                                    height={1000}
+                                    quality={100}
+                                    className='mb-4 h-auto max-h-[40vh] w-full rounded-md object-contain'
+                                    priority
                                 />
-                            </div>
+                            </motion.div>
                         )}
                     </div>
 
@@ -395,11 +367,17 @@ export default function Game({
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                         {quizQuestions[currentQuestion].options.map(
                             (option, index) => (
-                                <button
-                                    key={index}
+                                <motion.button
+                                    key={option}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{
+                                        duration: 0.5,
+                                        delay: index * 0.2 + 1.5,
+                                    }}
                                     onClick={() => handleAnswerSelect(option)}
                                     disabled={answered}
-                                    className={`group relative cursor-pointer overflow-hidden rounded-md border-2 p-4 text-left transition-all ${
+                                    className={`group relative cursor-pointer overflow-hidden rounded-md border-2 p-4 text-left ${
                                         answered &&
                                         option ===
                                             quizQuestions[currentQuestion]
@@ -438,36 +416,71 @@ export default function Game({
                                             {option}
                                         </span>
                                     </div>
-                                </button>
+                                </motion.button>
                             )
                         )}
                     </div>
 
                     {/* Action Buttons */}
-                    <div
+                    <motion.div
                         className={`${bebasNeue.className} mt-8 flex justify-center`}
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.8 }}
                     >
                         {!answered ? (
-                            <Button
-                                onClick={handleSubmitAnswer}
-                                disabled={!highlightedOption}
-                                className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800 disabled:opacity-50'
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                             >
-                                SUBMIT ANSWER
-                            </Button>
+                                <Button
+                                    onClick={handleSubmitAnswer}
+                                    disabled={!highlightedOption}
+                                    className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800 disabled:opacity-50'
+                                >
+                                    SUBMIT ANSWER
+                                </Button>
+                            </motion.div>
                         ) : (
-                            <Button
-                                onClick={handleNextQuestion}
-                                className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800'
+                            <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                             >
-                                {currentQuestion < quizQuestions.length - 1
-                                    ? 'NEXT QUESTION'
-                                    : 'SEE RESULTS'}
-                            </Button>
+                                <Button
+                                    onClick={handleNextQuestion}
+                                    className='bg-pink-700 px-12 py-8 text-4xl text-white hover:bg-pink-800'
+                                >
+                                    {currentQuestion < quizQuestions.length - 1
+                                        ? 'NEXT QUESTION'
+                                        : 'SEE RESULTS'}
+                                </Button>
+                            </motion.div>
                         )}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
+    )
+}
+
+const ArrowLeft = () => {
+    return (
+        <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+        >
+            <path
+                fill='none'
+                stroke='currentColor'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='m12 19l-7-7l7-7m7 7H5'
+            />
+        </svg>
     )
 }

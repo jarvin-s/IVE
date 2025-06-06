@@ -65,12 +65,10 @@ export default function LeaderboardPage() {
     if (isLoading) {
         return (
             <div className='flex min-h-screen items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200'>
-                <div className='flex items-center space-x-2'>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500 [animation-delay:-0.3s]'></div>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500 [animation-delay:-0.15s]'></div>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500'></div>
-                    <span className='text-lg font-medium text-pink-700'>
-                        Loading...
+                <div className='flex items-center justify-center space-x-2'>
+                    <div className='h-10 w-10 animate-spin rounded-full border-2 border-pink-700 border-t-transparent' />
+                    <span className='text-3xl font-bold text-black'>
+                        Loading
                     </span>
                 </div>
             </div>
@@ -81,7 +79,7 @@ export default function LeaderboardPage() {
         <div className='bg-gradient-to-b from-pink-100 to-pink-200'>
             <div className='mx-auto min-h-screen max-w-7xl px-4 py-8'>
                 <h1 className='mb-8 text-center text-4xl font-bold'>
-                    Quiz Leaderboard
+                    Leaderboard
                 </h1>
 
                 {/* Stats Cards */}
@@ -89,19 +87,19 @@ export default function LeaderboardPage() {
                     <div className='mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
                         <div className='bg-card rounded-lg bg-white p-6'>
                             <h3 className='text-sm font-bold text-pink-700'>
-                                Total Participants
+                                Total participants
                             </h3>
                             <p className='text-2xl'>{stats.totalUsers}</p>
                         </div>
                         <div className='bg-card rounded-lg bg-white p-6'>
                             <h3 className='text-sm font-bold text-pink-700'>
-                                Total Quizzes Taken
+                                Total quizzes taken
                             </h3>
                             <p className='text-2xl'>{stats.totalQuizzes}</p>
                         </div>
                         <div className='bg-card rounded-lg bg-white p-6'>
                             <h3 className='text-sm font-bold text-pink-700'>
-                                Average Score
+                                Average score
                             </h3>
                             <p className='text-2xl'>
                                 {stats.averageScore.toFixed(1)}
@@ -109,7 +107,7 @@ export default function LeaderboardPage() {
                         </div>
                         <div className='bg-card rounded-lg bg-white p-6'>
                             <h3 className='text-sm font-bold text-pink-700'>
-                                Highest Score
+                                Highest score (total)
                             </h3>
                             <p className='text-2xl'>{stats.topScore}</p>
                         </div>
@@ -120,7 +118,7 @@ export default function LeaderboardPage() {
                 {user && stats?.userStats && (
                     <div className='mb-8 rounded-lg border border-pink-200 bg-white p-6'>
                         <h3 className='mb-4 text-lg font-semibold text-pink-800'>
-                            Your Stats
+                            Your stats
                         </h3>
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
                             <div className='text-center'>
@@ -128,7 +126,7 @@ export default function LeaderboardPage() {
                                     #{stats.userStats.rank}
                                 </p>
                                 <p className='text-sm text-pink-800'>
-                                    Your Rank
+                                    Your rank
                                 </p>
                             </div>
                             <div className='text-center'>
@@ -136,7 +134,7 @@ export default function LeaderboardPage() {
                                     {stats.userStats.score}
                                 </p>
                                 <p className='text-sm text-pink-800'>
-                                    Total Score
+                                    Total score
                                 </p>
                             </div>
                             <div className='text-center'>
@@ -144,7 +142,7 @@ export default function LeaderboardPage() {
                                     {stats.userStats.quizzesTaken}
                                 </p>
                                 <p className='text-sm text-pink-800'>
-                                    Quizzes Taken
+                                    Quizzes taken
                                 </p>
                             </div>
                         </div>
@@ -178,10 +176,10 @@ export default function LeaderboardPage() {
                                         Score
                                     </th>
                                     <th className='px-6 py-3 text-left text-xs uppercase'>
-                                        Quizzes Taken
+                                        Quizzes taken
                                     </th>
                                     <th className='px-6 py-3 text-left text-xs uppercase'>
-                                        Avg per Quiz
+                                        Avg per quiz
                                     </th>
                                 </tr>
                             </thead>

@@ -341,12 +341,6 @@ export default function QuizDetails({
                     </div>
                 </div>
             )}
-
-            <footer className='py-4 text-center text-sm text-pink-700'>
-                <p>
-                    Made with 💖 for <strong>DIVE</strong>
-                </p>
-            </footer>
         </div>
     )
 }
