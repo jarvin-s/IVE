@@ -271,7 +271,7 @@ export default function QuizDetails({
                                     className='mt-4 flex w-full items-center gap-2 bg-red-600 text-white hover:bg-red-500 md:w-auto'
                                 >
                                     <Trash2 className='h-4 w-4' />
-                                    Delete Quiz
+                                    Delete quiz
                                 </Button>
                             </div>
 
@@ -281,7 +281,7 @@ export default function QuizDetails({
                                     href='/dashboard'
                                 >
                                     <Button className='w-full bg-pink-500 text-white hover:bg-pink-600 md:w-auto'>
-                                        Back to Dashboard
+                                        Back to dashboard
                                     </Button>
                                 </Link>
                                 <Link className='w-full md:w-auto' href='/quiz'>
@@ -289,7 +289,7 @@ export default function QuizDetails({
                                         variant='outline'
                                         className='w-full border-pink-300 text-pink-700 hover:bg-pink-50 md:w-auto'
                                     >
-                                        Take Another Quiz
+                                        Take another quiz
                                     </Button>
                                 </Link>
                             </div>

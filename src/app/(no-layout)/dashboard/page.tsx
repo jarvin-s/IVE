@@ -94,13 +94,13 @@ export default function Dashboard() {
                                         <table className='min-w-full'>
                                             <thead className='bg-pink-50'>
                                                 <tr>
-                                                    <th className='px-4 py-3 text-sm text-left font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
                                                         Date
                                                     </th>
-                                                    <th className='px-4 py-3 text-sm text-left font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-left text-sm font-medium text-pink-800'>
                                                         Score
                                                     </th>
-                                                    <th className='px-4 py-3 text-sm text-center font-medium text-pink-800'>
+                                                    <th className='px-4 py-3 text-center text-sm font-medium text-pink-800'>
                                                         Actions
                                                     </th>
                                                     <th className='px-4 py-3 text-sm font-medium text-pink-800'>
@@ -127,7 +127,7 @@ export default function Dashboard() {
                                                                 10
                                                             </td>
                                                             {!quiz.completed ? (
-                                                                <td className='px-4 py-3 flex justify-center text-right text-sm whitespace-nowrap'>
+                                                                <td className='px-4 py-3 text-right text-sm whitespace-nowrap'>
                                                                     <Link
                                                                         href={`/quiz/${quiz.session_id}`}
                                                                     >
