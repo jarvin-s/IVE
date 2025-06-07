@@ -206,7 +206,7 @@ export default function Dashboard() {
                                                                         <div className='flex justify-center gap-2'>
                                                                             {quiz.completed ? (
                                                                                 <Link
-                                                                                    href={`/quiz-details/${quiz.session_id}`}
+                                                                                    href={`/quiz/summary/${quiz.session_id}`}
                                                                                 >
                                                                                     <Button
                                                                                         size='sm'

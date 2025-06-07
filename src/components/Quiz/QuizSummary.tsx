@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle, Trash2 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Bebas_Neue } from 'next/font/google'
 
 const bebasNeue = Bebas_Neue({
@@ -24,7 +24,7 @@ interface Question {
     updated_at: string
 }
 
-interface QuizDetails {
+interface QuizSummaryData {
     session_id: string
     current_question: number
     score: number
@@ -39,16 +39,15 @@ interface QuizDetails {
     }>
 }
 
-export default function QuizDetails({
-    params,
-}: {
-    params: Promise<{ id: string }>
-}) {
+interface QuizSummaryProps {
+    id: string
+}
+
+export default function QuizSummary({ id }: QuizSummaryProps) {
     const { user, isLoaded } = useUser()
-    const [quizDetails, setQuizDetails] = useState<QuizDetails | null>(null)
+    const [quizSummary, setQuizSummary] = useState<QuizSummaryData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { id } = use(params)
 
     useEffect(() => {
         if (isLoaded && !user) {
@@ -57,24 +56,24 @@ export default function QuizDetails({
     }, [user, isLoaded])
 
     useEffect(() => {
-        const fetchQuizDetails = async () => {
+        const fetchQuizSummary = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`/api/quiz-details?id=${id}`)
+                const response = await fetch(`/api/quiz-summary?id=${id}`)
                 if (!response.ok) {
-                    throw new Error('Failed to fetch quiz details')
+                    throw new Error('Failed to fetch quiz summary')
                 }
                 const data = await response.json()
-                setQuizDetails(data.quizDetails)
+                setQuizSummary(data.quizSummary)
             } catch (error) {
-                console.error('Failed to fetch quiz details:', error)
+                console.error('Failed to fetch quiz summary:', error)
             } finally {
                 setLoading(false)
             }
         }
 
         if (id) {
-            fetchQuizDetails()
+            fetchQuizSummary()
         }
     }, [id])
 
@@ -91,7 +90,7 @@ export default function QuizDetails({
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`/api/quiz-details?id=${id}`, {
+            const response = await fetch(`/api/quiz-summary?id=${id}`, {
                 method: 'DELETE',
             })
 
@@ -118,7 +117,7 @@ export default function QuizDetails({
                 <h1
                     className={`${bebasNeue.className} text-7xl font-bold md:text-9xl`}
                 >
-                    Quiz details
+                    Quiz Summary
                 </h1>
             </header>
 
@@ -128,7 +127,7 @@ export default function QuizDetails({
                         <div className='flex justify-center py-8'>
                             <div className='h-6 w-6 animate-spin rounded-full border-2 border-pink-500 border-t-transparent'></div>
                         </div>
-                    ) : quizDetails ? (
+                    ) : quizSummary ? (
                         <div className='space-y-6'>
                             <div className='rounded-md bg-white p-6'>
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
@@ -140,7 +139,7 @@ export default function QuizDetails({
                                             Date taken
                                         </p>
                                         <p className='font-medium text-gray-800'>
-                                            {formatDate(quizDetails.created_at)}
+                                            {formatDate(quizSummary.created_at)}
                                         </p>
                                     </div>
                                     <div className='rounded-md bg-pink-50 p-4'>
@@ -148,8 +147,8 @@ export default function QuizDetails({
                                             Final score
                                         </p>
                                         <p className='font-medium text-gray-800'>
-                                            {quizDetails.score} /{' '}
-                                            {quizDetails.questions.length}
+                                            {quizSummary.score} /{' '}
+                                            {quizSummary.questions.length}
                                         </p>
                                     </div>
                                     <div className='rounded-md bg-pink-50 p-4'>
@@ -157,7 +156,7 @@ export default function QuizDetails({
                                             Status
                                         </p>
                                         <div className='flex items-center space-x-2'>
-                                            {quizDetails.completed ? (
+                                            {quizSummary.completed ? (
                                                 <>
                                                     <CheckCircle2 className='h-5 w-5 text-green-600' />
                                                     <p className='font-medium text-green-600'>
@@ -180,8 +179,8 @@ export default function QuizDetails({
                                         </p>
                                         <p className='font-medium text-gray-800'>
                                             {Math.round(
-                                                (quizDetails.score /
-                                                    quizDetails.questions
+                                                (quizSummary.score /
+                                                    quizSummary.questions
                                                         .length) *
                                                     100
                                             )}
@@ -196,12 +195,12 @@ export default function QuizDetails({
                                     Question review
                                 </h2>
 
-                                {quizDetails.answer_history.length > 0 ? (
+                                {quizSummary.answer_history.length > 0 ? (
                                     <div className='space-y-4'>
-                                        {quizDetails.questions.map(
+                                        {quizSummary.questions.map(
                                             (question, index) => {
                                                 const answer =
-                                                    quizDetails.answer_history[
+                                                    quizSummary.answer_history[
                                                         index
                                                     ]
 
@@ -365,4 +364,4 @@ const ArrowLeft = () => {
             />
         </svg>
     )
-}
+} 
