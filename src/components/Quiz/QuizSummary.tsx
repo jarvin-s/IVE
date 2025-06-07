@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { Bebas_Neue } from 'next/font/google'
+import { motion } from 'framer-motion'
 
 const bebasNeue = Bebas_Neue({
     subsets: ['latin'],
@@ -107,42 +108,76 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
     }
 
     return (
-        <div className='quiz-creation flex min-h-screen flex-col'>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className='quiz-creation flex min-h-screen flex-col'
+        >
             <header className='relative flex w-full justify-center px-6 py-4 text-white'>
-                <div className='absolute top-10 left-4 md:top-14 md:left-8'>
+                <motion.div
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className='absolute top-10 left-4 md:top-14 md:left-8'
+                >
                     <Link href='/dashboard'>
                         <ArrowLeft />
                     </Link>
-                </div>
-                <h1
+                </motion.div>
+                <motion.h1
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
                     className={`${bebasNeue.className} text-7xl font-bold md:text-9xl`}
                 >
                     Quiz Summary
-                </h1>
+                </motion.h1>
             </header>
 
             <main className='flex-1 p-6'>
-                <div className='mx-auto max-w-4xl'>
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className='mx-auto max-w-4xl'
+                >
                     {loading ? (
                         <div className='flex justify-center py-8'>
                             <div className='h-6 w-6 animate-spin rounded-full border-2 border-pink-500 border-t-transparent'></div>
                         </div>
                     ) : quizSummary ? (
-                        <div className='space-y-6'>
-                            <div className='rounded-md bg-white p-6'>
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                            className='space-y-6'
+                        >
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 0.6 }}
+                                className='rounded-md bg-white p-6'
+                            >
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
                                     Summary
                                 </h2>
                                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                                    <div className='rounded-md bg-pink-50 p-4'>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        className='rounded-md bg-pink-50 p-4'
+                                    >
                                         <p className='text-sm text-pink-700'>
                                             Date taken
                                         </p>
                                         <p className='font-medium text-gray-800'>
                                             {formatDate(quizSummary.created_at)}
                                         </p>
-                                    </div>
-                                    <div className='rounded-md bg-pink-50 p-4'>
+                                    </motion.div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        className='rounded-md bg-pink-50 p-4'
+                                    >
                                         <p className='text-sm text-pink-700'>
                                             Final score
                                         </p>
@@ -150,8 +185,11 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                             {quizSummary.score} /{' '}
                                             {quizSummary.questions.length}
                                         </p>
-                                    </div>
-                                    <div className='rounded-md bg-pink-50 p-4'>
+                                    </motion.div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        className='rounded-md bg-pink-50 p-4'
+                                    >
                                         <p className='text-sm text-pink-700'>
                                             Status
                                         </p>
@@ -172,8 +210,11 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                                 </>
                                             )}
                                         </div>
-                                    </div>
-                                    <div className='rounded-md bg-pink-50 p-4'>
+                                    </motion.div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        className='rounded-md bg-pink-50 p-4'
+                                    >
                                         <p className='text-sm text-pink-700'>
                                             Percentage
                                         </p>
@@ -186,11 +227,16 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                             )}
                                             %
                                         </p>
-                                    </div>
+                                    </motion.div>
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            <div className='rounded-md bg-white p-6'>
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 0.7 }}
+                                className='rounded-md bg-white p-6'
+                            >
                                 <h2 className='mb-4 text-2xl font-bold text-pink-700'>
                                     Question review
                                 </h2>
@@ -205,7 +251,18 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                                     ]
 
                                                 return (
-                                                    <div
+                                                    <motion.div
+                                                        initial={{
+                                                            x: -20,
+                                                            opacity: 0,
+                                                        }}
+                                                        animate={{
+                                                            x: 0,
+                                                            opacity: 1,
+                                                        }}
+                                                        transition={{
+                                                            delay: 0.1 * index,
+                                                        }}
                                                         key={question.id}
                                                         className={`rounded-md p-4 ${
                                                             answer?.correct
@@ -254,7 +311,7 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </motion.div>
                                                 )
                                             }
                                         )}
@@ -274,7 +331,7 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                     <Trash2 className='h-4 w-4' />
                                     Delete quiz
                                 </Button>
-                            </div>
+                            </motion.div>
 
                             <div className='flex justify-center space-x-4'>
                                 <Link
@@ -294,7 +351,7 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                                     </Button>
                                 </Link>
                             </div>
-                        </div>
+                        </motion.div>
                     ) : (
                         <div className='rounded-md bg-pink-50 p-6 text-center'>
                             <p className='text-gray-600'>
@@ -310,7 +367,7 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                             </div>
                         </div>
                     )}
-                </div>
+                </motion.div>
             </main>
 
             {showDeleteModal && (
@@ -342,7 +399,7 @@ export default function QuizSummary({ id }: QuizSummaryProps) {
                     </div>
                 </div>
             )}
-        </div>
+        </motion.div>
     )
 }
 
@@ -364,4 +421,4 @@ const ArrowLeft = () => {
             />
         </svg>
     )
-} 
+}
