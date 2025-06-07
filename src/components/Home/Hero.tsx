@@ -17,7 +17,7 @@ const Hero = () => {
             <div className='relative flex w-screen flex-col items-center justify-center overflow-x-hidden text-white'>
                 <div className='flex h-[80vh] flex-col items-center justify-center overflow-hidden'>
                     <h1
-                        className={`${bebas_neue.className} text-center text-[5rem] leading-none md:text-[24rem]`}
+                        className={`${bebas_neue.className} text-center text-[6rem] leading-none md:text-[24rem]`}
                     >
                         DIVE INTO IVE
                     </h1>

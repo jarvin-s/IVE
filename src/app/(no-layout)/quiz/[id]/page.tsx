@@ -25,7 +25,7 @@ export default function GamePage({
     params: Promise<{ id: string }>
 }) {
     const [questions, setQuestions] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [isLoading, setLoading] = useState(true)
     const [session, setSession] = useState<QuizSession | null>(null)
     const supabase = createClient()
     const router = useRouter()
@@ -33,7 +33,6 @@ export default function GamePage({
     const { id } = use(params)
     const hasFetched = useRef(false)
 
-    //! FIX DATES IN ANSWERS
     useEffect(() => {
         if (hasFetched.current) return
         hasFetched.current = true
@@ -80,15 +79,13 @@ export default function GamePage({
         fetchSession()
     }, [id, supabase, router, user])
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className='flex min-h-screen items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200'>
-                <div className='flex items-center space-x-2'>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500 [animation-delay:-0.3s]'></div>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500 [animation-delay:-0.15s]'></div>
-                    <div className='h-4 w-4 animate-bounce rounded-full bg-pink-500'></div>
-                    <span className='text-lg font-medium text-pink-700'>
-                        Loading...
+                <div className='flex items-center justify-center space-x-2'>
+                    <div className='h-10 w-10 animate-spin rounded-full border-2 border-pink-700 border-t-transparent' />
+                    <span className='text-3xl font-bold text-black'>
+                        Loading
                     </span>
                 </div>
             </div>

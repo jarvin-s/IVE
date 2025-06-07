@@ -49,10 +49,6 @@ export async function PUT(request: Request) {
         const { userId } = await auth()
         console.log('Auth result:', { userId })
 
-        if (!userId) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
-
         const body = await request.json()
         console.log('Request body:', body)
 
@@ -101,7 +97,9 @@ export async function PUT(request: Request) {
 
         if (completed && !existingSession.completed) {
             console.log('Quiz completed, updating leaderboard')
-            updateLeaderboardAsync(userId)
+            if (userId) {
+                updateLeaderboardAsync(userId)
+            }
         }
 
         console.log('Quiz update successful')
