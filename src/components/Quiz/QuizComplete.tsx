@@ -53,7 +53,7 @@ export default function QuizComplete({
                                     className='relative mb-6'
                                 >
                                     <CircleDashed
-                                        className='h-36 w-36 text-white/20'
+                                        className='h-44 w-44 text-white/20'
                                         strokeWidth={1}
                                     />
                                     <div className='absolute inset-0 flex items-center justify-center'>
@@ -135,7 +135,7 @@ export default function QuizComplete({
                             <Button
                                 asChild
                                 variant='outline'
-                                className='w-64 border-[#6d6d6d2a] text-white hover:bg-purple-700'
+                                className='w-64 border-[#6d6d6d2a] text-white hover:bg-pink-700'
                             >
                                 <Link href='/'>Back to home</Link>
                             </Button>
