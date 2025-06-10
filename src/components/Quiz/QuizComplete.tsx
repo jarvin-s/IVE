@@ -43,7 +43,7 @@ export default function QuizComplete({
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                    <Card className='mb-6 overflow-hidden border-white/20 bg-pink-500/30 text-white backdrop-blur-md'>
+                    <Card className='mb-6 overflow-hidden text-white'>
                         <CardContent className='p-0'>
                             <div className='flex flex-col items-center justify-center p-8'>
                                 <motion.div
@@ -53,7 +53,7 @@ export default function QuizComplete({
                                     className='relative mb-6'
                                 >
                                     <CircleDashed
-                                        className='h-36 w-36 text-white/20'
+                                        className='h-44 w-44 text-white/20'
                                         strokeWidth={1}
                                     />
                                     <div className='absolute inset-0 flex items-center justify-center'>
@@ -67,7 +67,11 @@ export default function QuizComplete({
                                             className='text-center'
                                         >
                                             <span className='text-5xl font-bold'>
-                                                {score}%
+                                                {Math.round(
+                                                    (score / totalQuestions) *
+                                                        100
+                                                )}
+                                                %
                                             </span>
                                         </motion.div>
                                     </div>
@@ -80,35 +84,13 @@ export default function QuizComplete({
                                     className='text-center'
                                 >
                                     <p className='text-4xl font-bold'>
-                                        {score}{' '}
-                                        <span className='text-white/80'>
-                                            out of
-                                        </span>{' '}
-                                        {totalQuestions}
+                                        {score} out of {totalQuestions}
                                     </p>
-                                    <p className='mt-2 text-xl text-white/80'>
+                                    <p className='mt-2 text-xl'>
                                         questions answered correctly
                                     </p>
                                 </motion.div>
                             </div>
-
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.6, delay: 1.6 }}
-                                className='flex justify-center border-t border-white/20'
-                            >
-                                <div className='flex flex-col items-center justify-center p-6'>
-                                    <Button
-                                        asChild
-                                        className='w-full rounded-md bg-pink-700 px-6 py-2 text-white transition-all hover:bg-pink-900'
-                                    >
-                                        <Link href={`/quiz`}>
-                                            Try another quiz
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </motion.div>
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -118,7 +100,13 @@ export default function QuizComplete({
                     transition={{ duration: 0.6, delay: 1.8 }}
                     className='flex flex-col items-center gap-4'
                 >
-                    <div className='flex flex-col gap-4 md:flex-row'>
+                    <div className='flex flex-col gap-4'>
+                        <Button
+                            asChild
+                            className='w-full rounded-md bg-pink-700 px-6 py-2 text-white transition-all hover:bg-pink-900'
+                        >
+                            <Link href={`/quiz`}>Try another quiz</Link>
+                        </Button>
                         {isAuthenticated ? (
                             <>
                                 <Button
@@ -143,7 +131,7 @@ export default function QuizComplete({
                             <Button
                                 asChild
                                 variant='outline'
-                                className='w-64 border-[#6d6d6d2a] text-white hover:bg-purple-700'
+                                className='w-64 border-[#6d6d6d2a] text-white hover:bg-pink-700'
                             >
                                 <Link href='/'>Back to home</Link>
                             </Button>

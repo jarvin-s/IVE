@@ -21,7 +21,7 @@ export default function QuizCreation() {
 
     return (
         <div className='quiz-creation flex min-h-screen flex-col overflow-x-hidden text-white'>
-            <main className='flex h-[80vh] flex-col items-center justify-center p-6 text-center'>
+            <main className='flex h-screen flex-col items-center justify-center p-6 text-center'>
                 <div className='mx-auto w-full max-w-[904px]'>
                     <div className='relative mb-8'>
                         <motion.div
@@ -101,4 +101,4 @@ export default function QuizCreation() {
             </main>
         </div>
     )
-} 
+}
