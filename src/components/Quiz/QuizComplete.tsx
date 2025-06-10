@@ -84,13 +84,9 @@ export default function QuizComplete({
                                     className='text-center'
                                 >
                                     <p className='text-4xl font-bold'>
-                                        {score}{' '}
-                                        <span className='text-white/80'>
-                                            out of
-                                        </span>{' '}
-                                        {totalQuestions}
+                                        {score} out of {totalQuestions}
                                     </p>
-                                    <p className='mt-2 text-xl text-white/80'>
+                                    <p className='mt-2 text-xl'>
                                         questions answered correctly
                                     </p>
                                 </motion.div>

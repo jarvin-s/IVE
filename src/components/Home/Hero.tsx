@@ -31,7 +31,7 @@ const Hero = () => {
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 2.5, delay: 0.5 }}
+                    transition={{ duration: 2.5, delay: 1 }}
                     className='flex h-[80vh] flex-col items-center justify-center overflow-hidden'
                 >
                     <h1
