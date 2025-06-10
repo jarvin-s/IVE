@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { AuthButtons } from '../Auth/AuthButtons'
 import { Button } from '../ui/button'
 import { Bebas_Neue } from 'next/font/google'
+import { motion } from 'motion/react'
 
 const bebas_neue = Bebas_Neue({
     subsets: ['latin'],
@@ -26,7 +27,12 @@ export function Navbar() {
     }
 
     return (
-        <nav className='sticky top-0 z-50 w-full py-2 text-white'>
+        <motion.nav
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, delay: 2.5 }}
+            className='sticky top-0 z-50 w-full py-2 text-white'
+        >
             <div className='mx-auto max-w-7xl'>
                 <div className='flex items-center justify-between p-4'>
                     {/* Logo */}
@@ -42,7 +48,12 @@ export function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className='hidden flex-1 md:block'>
-                        <div className='flex items-center justify-center space-x-10'>
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className='flex items-center justify-center space-x-10'
+                        >
                             <Link
                                 href='/'
                                 className={cn(
@@ -60,10 +71,15 @@ export function Navbar() {
                             >
                                 Quiz
                             </Link>
-                        </div>
+                        </motion.div>
                     </div>
 
-                    <div className='hidden items-center gap-4 md:flex'>
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        className='hidden items-center gap-4 md:flex'
+                    >
                         <AuthButtons />
                         {/* <Link
                             href='#'
@@ -77,7 +93,7 @@ export function Navbar() {
                                 className='rounded-full'
                             />
                         </Link> */}
-                    </div>
+                    </motion.div>
 
                     {/* Mobile menu button */}
                     <div
@@ -95,21 +111,14 @@ export function Navbar() {
                                     className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
                                         isOpen ? 'rotate-45' : ''
                                     }`}
-                                ></span>
+                                />
                                 <span
                                     className={`absolute block h-[2px] bg-white/60 transition-all duration-300 ${
                                         isOpen
                                             ? 'w-6 -rotate-45'
                                             : 'ml-auto w-4 translate-y-[6px] group-hover:w-6'
                                     }`}
-                                ></span>
-                                <span
-                                    className={`absolute block h-[2px] w-6 bg-white/60 transition-all duration-300 ${
-                                        isOpen
-                                            ? 'opacity-0'
-                                            : '-translate-y-[6px] opacity-0'
-                                    }`}
-                                ></span>
+                                />
                             </div>
                         </Button>
                     </div>
@@ -183,7 +192,7 @@ export function Navbar() {
                     </Link>
                 </div>
             </div>
-        </nav>
+        </motion.nav>
     )
 }
 

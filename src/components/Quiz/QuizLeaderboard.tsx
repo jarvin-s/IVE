@@ -82,6 +82,9 @@ export default function QuizLeaderboard() {
         )
     }
 
+    const topThree = leaderboardData.slice(0, 3)
+    const remainingEntries = leaderboardData.slice(3)
+
     return (
         <div className='quiz-creation'>
             <div className='mx-auto min-h-screen max-w-7xl px-4 py-8'>
@@ -163,6 +166,48 @@ export default function QuizLeaderboard() {
                     </div>
                 )}
 
+                {/* Top 3 Podium */}
+                {!isLoading && !error && topThree.length > 0 && (
+                    <div className='mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3'>
+                        {/* First Place */}
+                        <div className='order-0 flex transform flex-col items-center rounded-lg bg-yellow-100 p-4'>
+                            <div className='mb-2 text-4xl'>🏆</div>
+                            <div className='text-center'>
+                                <p className='text-lg font-bold'>
+                                    {topThree[0]?.username.toLowerCase()}
+                                </p>
+                                <p className='text-sm text-gray-600'>
+                                    {topThree[0]?.score.toLocaleString()} pts
+                                </p>
+                            </div>
+                        </div>
+                        {/* Second Place */}
+                        <div className='order-1 flex flex-col items-center rounded-lg bg-gray-100 p-4'>
+                            <div className='mb-2 text-4xl'>🥈</div>
+                            <div className='text-center'>
+                                <p className='font-bold'>
+                                    {topThree[1]?.username.toLowerCase()}
+                                </p>
+                                <p className='text-sm text-gray-600'>
+                                    {topThree[1]?.score.toLocaleString()} pts
+                                </p>
+                            </div>
+                        </div>
+                        {/* Third Place */}
+                        <div className='order-2 flex flex-col items-center rounded-lg bg-orange-50 p-4'>
+                            <div className='mb-2 text-4xl'>🥉</div>
+                            <div className='text-center'>
+                                <p className='font-bold'>
+                                    {topThree[2]?.username.toLowerCase()}
+                                </p>
+                                <p className='text-sm text-gray-600'>
+                                    {topThree[2]?.score.toLocaleString()} pts
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Loading State */}
                 {isLoading ? (
                     <div className='flex min-h-[200px] items-center justify-center'>
@@ -198,7 +243,7 @@ export default function QuizLeaderboard() {
                                 </tr>
                             </thead>
                             <tbody className='bg-popover divide-muted divide-y'>
-                                {leaderboardData.map((entry) => {
+                                {remainingEntries.map((entry) => {
                                     const isCurrentUser =
                                         user &&
                                         entry.username ===
@@ -208,13 +253,10 @@ export default function QuizLeaderboard() {
                                     return (
                                         <tr
                                             key={entry.rank}
-                                            className={`hover:bg-muted/50 transition-colors duration-200 ${entry.rank === 1 ? 'bg-yellow-50/20 dark:bg-yellow-950/20' : ''} ${isCurrentUser ? 'border-l-4 border-pink-500 bg-pink-50/20 dark:bg-pink-950/20' : ''} `}
+                                            className={`hover:bg-muted/50 transition-colors duration-200 ${isCurrentUser ? 'border-l-4 border-pink-500 bg-pink-50/20 dark:bg-pink-950/20' : ''} `}
                                         >
                                             <td className='px-6 py-4 whitespace-nowrap'>
                                                 <div className='flex items-center'>
-                                                    {entry.rank === 1 && '🏆 '}
-                                                    {entry.rank === 2 && '🥈 '}
-                                                    {entry.rank === 3 && '🥉 '}
                                                     {entry.rank}
                                                 </div>
                                             </td>

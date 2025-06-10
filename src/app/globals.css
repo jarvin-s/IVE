@@ -43,7 +43,7 @@
 }
 
 body {
-    /* background-color: #500724; */
+    background-color: #000;
     overflow-x: hidden;
 }
 
@@ -92,6 +92,7 @@ body {
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .quiz-complete {
